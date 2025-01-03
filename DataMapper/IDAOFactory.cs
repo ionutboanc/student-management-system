@@ -8,16 +8,27 @@ namespace DataMapper
 {
     public interface IDAOFactory
     {
-        /// <summary>Gets the customer data services.</summary>
-        /// <value>The customer data services.</value>
-        ICustomerDataServices CustomerDataServices
+        ICourseDataServices CourseDataServices
         {
             get;
         }
 
-        /// <summary>Gets the produc data services.</summary>
-        /// <value>The produc data services.</value>
-        IProductDataServices ProducDataServices
+        IStudentDataServices StudentDataServices
+        {
+            get;
+        }
+
+        ISemesterDataServices SemesterDataServices
+        {
+            get;
+        }
+
+        IEnrollmentDataServices EnrollmentDataServices
+        {
+            get;
+        }
+
+        IPrerequisiteDataServices PrerequisiteDataServices
         {
             get;
         }

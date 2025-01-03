@@ -1,26 +1,49 @@
-﻿using System;
+﻿namespace DataMapper.SqlServerDAO
+{
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace DataMapper.SqlServerDAO
-{
     class SQLServerDAOFactory : IDAOFactory
     {
-        public IProductDataServices ProducDataServices
+        public ICourseDataServices CourseDataServices
         {
             get
             {
-                return new SQLProductDataServices();
+                return new SQLCourseDataServices();
             }
         }
 
-        public ICustomerDataServices CustomerDataServices
+        public IStudentDataServices StudentDataServices
         {
             get
             {
-                return new SQLCustomerDataServices();
+                return new SQLStudentDataServices();
+            }
+        }
+
+        public ISemesterDataServices SemesterDataServices
+        {
+            get
+            {
+                return new SQLSemesterDataServices();
+            }
+        }
+
+        public IEnrollmentDataServices EnrollmentDataServices
+        {
+            get
+            {
+                return new SQLEnrollmentDataServices();
+            }
+        }
+
+        public IPrerequisiteDataServices PrerequisiteDataServices
+        {
+            get
+            {
+                return new SQLPrerequisiteDataServices();
             }
         }
     }

@@ -77,14 +77,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICourseDataServices.cs" />
     <Compile Include="DAOFactoryMethod.cs" />
-    <Compile Include="ICustomerDataServices.cs" />
     <Compile Include="IDAOFactory.cs" />
-    <Compile Include="IProductDataServices.cs" />
+    <Compile Include="IEnrollmentDataServices.cs" />
+    <Compile Include="ISemesterDataServices.cs" />
+    <Compile Include="IStudentDataServices.cs" />
+    <Compile Include="Migrations\202501011438385_InitialCreate.cs" />
+    <Compile Include="Migrations\202501011438385_InitialCreate.Designer.cs">
+      <DependentUpon>202501011438385_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202501022012023_Refactored.cs" />
+    <Compile Include="Migrations\202501022012023_Refactored.Designer.cs">
+      <DependentUpon>202501022012023_Refactored.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202501031317182_SwitchedToEnglish.cs" />
+    <Compile Include="Migrations\202501031317182_SwitchedToEnglish.Designer.cs">
+      <DependentUpon>202501031317182_SwitchedToEnglish.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="SqlServerDAO\SQLPrerequisiteDataServices.cs" />
+    <Compile Include="IPrerequisiteDataServices.cs" />
+    <Compile Include="SqlServerDAO\SQLEnrollmentDataServices.cs" />
+    <Compile Include="SqlServerDAO\SQLSemesterDataServices.cs" />
+    <Compile Include="SqlServerDAO\SQLStudentDataServices.cs" />
+    <Compile Include="SqlServerDAO\SQLCourseDataServices.cs" />
     <Compile Include="SqlServerDAO\MyApplicationContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlServerDAO\SQLCustomerDataServices.cs" />
-    <Compile Include="SqlServerDAO\SQLProductDataServices.cs" />
     <Compile Include="SqlServerDAO\SQLServerDAOFactory.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +120,17 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
     <Analyzer Include="..\packages\xunit.analyzers.1.16.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
     <Analyzer Include="..\packages\xunit.analyzers.1.16.0\analyzers\dotnet\cs\xunit.analyzers.fixes.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202501011438385_InitialCreate.resx">
+      <DependentUpon>202501011438385_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202501022012023_Refactored.resx">
+      <DependentUpon>202501022012023_Refactored.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202501031317182_SwitchedToEnglish.resx">
+      <DependentUpon>202501031317182_SwitchedToEnglish.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -27,9 +27,6 @@ namespace DataMapper
                     case "sqlserver":
                         _currentDAOFactory = new SQLServerDAOFactory();
                         break;
-                    case "oracle":
-                        _currentDAOFactory = new OracleDAOFactory();//de fapt ar trebui un new OracleDaoFactory, dar care nu e inca scris
-                        return;
                     default:
                         _currentDAOFactory = new SQLServerDAOFactory();
                         break;

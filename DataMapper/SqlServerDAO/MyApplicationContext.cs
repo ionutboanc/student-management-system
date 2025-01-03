@@ -1,24 +1,76 @@
-﻿namespace DataMapper.SqlServerDAO
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using DemoEF6CodeFirst.DomainModel;
-    class MyApplicationContext : DbContext
-    {
-        /// <summary>Initializes a new instance of the <see cref="MyApplicationContext" /> class.</summary>
-        public MyApplicationContext() : base("myConStr")
-        {
+﻿using System.Data.Entity;
+using DomainModel.Models;
 
+namespace DataMapper.SqlServerDAO
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MyApplicationContext"/> class.
+    /// </summary>
+    public class MyApplicationContext : DbContext
+    {
+        public MyApplicationContext()
+            : base("myConStr")
+        {
         }
 
-        public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<OrderLine> OrderLines { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
+        /// <summary>
+        /// Gets or sets the Students.
+        /// </summary>
+        public virtual DbSet<Student> Students { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Courses.
+        /// </summary>
+        public virtual DbSet<Course> Courses { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Semesters.
+        /// </summary>
+        public virtual DbSet<Semester> Semesters { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Enrollments.
+        /// </summary>
+        public virtual DbSet<Enrollment> Enrollments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Prerequisites.
+        /// </summary>
+        public virtual DbSet<Prerequisite> Prerequisites { get; set; }
+
+        /// <summary>
+        /// Configures the model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Course>()
+                .HasMany(c => c.Prerequisites)
+                .WithRequired(p => p.Course)
+                .HasForeignKey(p => p.CourseId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Course>()
+                .HasMany(c => c.AvailableSemesters)
+                .WithMany(s => s.AvailableCourses)
+                .Map(cs =>
+                {
+                    cs.MapLeftKey("CourseId");
+                    cs.MapRightKey("SemesterId");
+                    cs.ToTable("CourseSemesters");
+                });
+
+            modelBuilder.Entity<Student>()
+                .HasMany(s => s.Enrollments)
+                .WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId);
+
+            modelBuilder.Entity<Course>()
+                .HasMany(c => c.Enrollments)
+                .WithRequired(e => e.Course)
+                .HasForeignKey(e => e.CourseId);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
