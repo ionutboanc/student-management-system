@@ -24,7 +24,7 @@ namespace ServiceLayer.ServiceImplementation
 
         public IList<Student> GetAllStudents()
         {
-            return DAOFactoryMethod.CurrentDAOFactory.StudentDataServices.GetAllStudenti();
+            return DAOFactoryMethod.CurrentDAOFactory.StudentDataServices.GetAllStudents();
         }
 
         public void UpdateStudent(Student student)

@@ -80,7 +80,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CourseTests.cs" />
+    <Compile Include="EnrollmentTests.cs" />
+    <Compile Include="PrerequisiteTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SemesterTests.cs" />
+    <Compile Include="StudentTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainModel\DomainModel.csproj">

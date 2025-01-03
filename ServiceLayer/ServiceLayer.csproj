@@ -70,15 +70,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPrerequisiteDataServices.cs" />
-    <Compile Include="IInscriereDataServices.cs" />
-    <Compile Include="ISemestruDataServices.cs" />
+    <Compile Include="IEnrollmentDataServices.cs" />
+    <Compile Include="ISemesterDataServices.cs" />
     <Compile Include="IStudentDataServices.cs" />
-    <Compile Include="ICursDataServices.cs" />
+    <Compile Include="ICourseDataServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceImplementation\CursServicesImplementation.cs" />
-    <Compile Include="ServiceImplementation\InscriereServicesImplementation.cs" />
+    <Compile Include="ServiceImplementation\CourseServicesImplementation.cs" />
+    <Compile Include="ServiceImplementation\EnrollmentServicesImplementation.cs" />
     <Compile Include="ServiceImplementation\PrerequisiteServicesImplementation.cs" />
-    <Compile Include="ServiceImplementation\SemestruServicesImplementation.cs" />
+    <Compile Include="ServiceImplementation\SemesterServicesImplementation.cs" />
     <Compile Include="ServiceImplementation\StudentServicesImplementation.cs" />
   </ItemGroup>
   <ItemGroup>
