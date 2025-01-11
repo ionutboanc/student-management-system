@@ -28,7 +28,7 @@
                 CourseId = 1,
                 SemesterId = 1,
                 NumberOfAttempts = 0,
-                Grade = 0,
+                Grade = 1,
                 LastAttemptDate = null
             };
         }
@@ -122,7 +122,7 @@
         [TestMethod]
         public void TestGradeCanBeNull()
         {
-            this.enrollment.Grade = 0;
+            this.enrollment.Grade = 1;
 
             var context = new ValidationContext(this.enrollment, null, null);
             var results = new List<ValidationResult>();

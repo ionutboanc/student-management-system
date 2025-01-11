@@ -1,0 +1,11 @@
+{
+  "settings": {
+    "documentationRules": {
+      "companyName": "Transilvania University of Brasov",
+      "copyrightText": "Copyright (c) {companyName}. All rights reserved.",
+      "fileNamingConvention": "metadata",
+      "xmlHeader": true,
+      "headerDecoration": "///"
+    }
+  }
+}

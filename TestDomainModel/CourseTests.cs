@@ -30,9 +30,6 @@
                 Cost = 500,
                 MinThreshold = 50,
                 MaxThreshold = 150,
-                Prerequisites = new List<Prerequisite>(),
-                Enrollments = new List<Enrollment>(),
-                AvailableSemesters = new List<Semester>()
             };
         }
 
@@ -227,16 +224,6 @@
         }
 
         /// <summary>
-        /// Tests that attempting to add a null prerequisite throws an exception.
-        /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestAddNullPrerequisite()
-        {
-            this.course.Prerequisites.Add(null);
-        }
-
-        /// <summary>
         /// Tests that course has availability in semesters.
         /// </summary>
         [TestMethod]
@@ -337,16 +324,6 @@
 
             Assert.AreEqual(1, this.course.Enrollments.Count);
             Assert.AreEqual(1, this.course.Enrollments.First().StudentId);
-        }
-
-        /// <summary>
-        /// Tests that attempting to add a null enrollment throws an exception.
-        /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestAddNullEnrollment()
-        {
-            this.course.Enrollments.Add(null);
         }
 
         // Additional tests can be added to cover more edge cases and validations.

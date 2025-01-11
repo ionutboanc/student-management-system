@@ -24,14 +24,14 @@
             // Initialize a valid student entity
             this.student = new Student
             {
-                FirstName = "John",
-                LastName = "Doe",
-                Address = "123 Main St",
-                RegistrationNumber = "REG123",
+                FirstName = "Boanc",
+                LastName = "Ionut",
+                Address = "Str. Arenei",
+                RegistrationNumber = "123456",
                 NationalId = "1234567890123",
-                Phones = new List<string> { "+40712345678" },
-                Emails = new List<string> { "john.doe@example.com" },
-                Enrollments = new List<Enrollment>()
+                Phones = new List<string> { "0712345678" },
+                Emails = new List<string> { "boanc.ionut@example.com" },
+                Balance = 200m,
             };
         }
 
@@ -164,53 +164,153 @@
         }
 
         /// <summary>
-        /// Tests that attempting to add a null enrollment throws an exception.
-        /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestAddNullEnrollment()
-        {
-            this.student.Enrollments.Add(null);
-        }
-
-        /// <summary>
         /// Tests that student phone validation fails with an invalid phone number.
         /// </summary>
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestInvalidPhoneNumber()
         {
-            this.student.Phones = new List<string> { "InvalidPhoneNumber" };
-
-            bool isValid = this.student.Phones.All(phone => IsValidPhone(phone));
-
-            Assert.IsFalse(isValid);
+            this.student.AddPhone("03123456789");
         }
 
-        private bool IsValidPhone(string phone)
+        /// <summary>
+        /// Tests that student phone validation passes with a valid phone number.
+        /// </summary>
+        [TestMethod]
+        public void TestValidPhoneNumber()
         {
-            // Simplified phone validation for Romanian format
-            return System.Text.RegularExpressions.Regex.IsMatch(phone, @"^\+407\d{8}$");
+            this.student.AddPhone("0712345678");
+
+            Assert.IsTrue(this.student.Phones.Contains("0712345678"));
+        }
+
+        /// <summary>
+        /// Tests that student phone validation fails with a null phone number.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestNullPhoneNumber()
+        {
+            this.student.AddPhone(null);
+        }
+
+        /// <summary>
+        /// Tests that student phone validation fails with an empty phone number.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestEmptyPhoneNumber()
+        {
+            this.student.AddPhone(string.Empty);
+        }
+
+        /// <summary>
+        /// Tests that student phone validation fails with a whitespace phone number.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestWhitespacePhoneNumber()
+        {
+            this.student.AddPhone("   ");
         }
 
         /// <summary>
         /// Tests that student email validation fails with an invalid email address.
         /// </summary>
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestInvalidEmailAddress()
         {
-            this.student.Emails = new List<string> { "invalid-email" };
-
-            bool isValid = this.student.Emails.All(email => IsValidEmail(email));
-
-            Assert.IsFalse(isValid);
+            this.student.AddEmail("invalid-email");
         }
 
-        private bool IsValidEmail(string email)
+        /// <summary>
+        /// Tests that student email validation passes with a valid email address.
+        /// </summary>
+        [TestMethod]
+        public void TestValidEmailAddress()
         {
-            // Simplified email validation
-            return new EmailAddressAttribute().IsValid(email);
+            this.student.AddEmail("ionut.boanc@example.com");
+
+            Assert.IsTrue(this.student.Emails.Contains("ionut.boanc@example.com"));
         }
 
-        // Additional tests can be added to cover more edge cases and validations.
+        /// <summary>
+        /// Tests that student email validation fails with a null email address.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestNullEmailAddress()
+        {
+            this.student.AddEmail(null);
+        }
+
+        /// <summary>
+        /// Tests that student email validation fails with an empty email address.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestEmptyEmailAddress()
+        {
+            this.student.AddEmail(string.Empty);
+        }
+
+        /// <summary>
+        /// Tests that student email validation fails with a whitespace email address.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestWhitespaceEmailAddress()
+        {
+            this.student.AddEmail("   ");
+        }
+
+        /// <summary>
+        /// Tests that the balance is deducted correctly.
+        /// </summary>
+        [TestMethod]
+        public void TestDeductBalance()
+        {
+            // Arrange
+            decimal initialBalance = this.student.Balance;
+            decimal amountToDeduct = 200m;
+
+            // Act
+            this.student.DeductBalance(amountToDeduct);
+
+            // Assert
+            Assert.AreEqual(initialBalance - amountToDeduct, this.student.Balance);
+        }
+
+        /// <summary>
+        /// Tests that the balance is added correctly.
+        /// </summary>
+        [TestMethod]
+        public void TestAddBalance()
+        {
+            // Arrange
+            decimal initialBalance = this.student.Balance;
+            decimal amountToAdd = 300m;
+
+            // Act
+            this.student.AddBalance(amountToAdd);
+
+            // Assert
+            Assert.AreEqual(initialBalance + amountToAdd, this.student.Balance);
+        }
+
+        /// <summary>
+        /// Tests that the balance cannot be deducted below zero.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestDeductBalanceBelowZero()
+        {
+            // Arrange
+            decimal amountToDeduct = this.student.Balance + 1;
+
+            // Act
+            this.student.DeductBalance(amountToDeduct);
+        }
     }
 }

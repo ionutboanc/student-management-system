@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class SwitchedToEnglish : DbMigration
+    public partial class Refactor : DbMigration
     {
         public override void Up()
         {

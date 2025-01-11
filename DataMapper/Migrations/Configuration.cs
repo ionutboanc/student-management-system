@@ -10,7 +10,6 @@
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "DataMapper.SqlServerDAO.MyApplicationContext";
         }
 
         protected override void Seed(DataMapper.SqlServerDAO.MyApplicationContext context)

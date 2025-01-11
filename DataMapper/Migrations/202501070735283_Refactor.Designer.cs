@@ -7,13 +7,13 @@ namespace DataMapper.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class SwitchedToEnglish : IMigrationMetadata
+    public sealed partial class Refactor : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(SwitchedToEnglish));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Refactor));
         
         string IMigrationMetadata.Id
         {
-            get { return "202501031317182_SwitchedToEnglish"; }
+            get { return "202501070735283_Refactor"; }
         }
         
         string IMigrationMetadata.Source

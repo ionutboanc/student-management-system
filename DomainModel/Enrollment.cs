@@ -1,7 +1,6 @@
 ﻿namespace DomainModel.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     // Model for Enrollment
@@ -18,7 +17,7 @@
         public int SemesterId { get; set; }
         public virtual Semester Semester { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "The number of attempts must be non-negative.")]
+        [Range(1, Constants.MaxNumberOfAttempts, ErrorMessage = "The number of attempts must be between 1 and " + nameof(Constants.MaxNumberOfAttempts))]
         public int NumberOfAttempts { get; set; }
 
         public DateTime? LastAttemptDate { get; set; }
