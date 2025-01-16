@@ -1,12 +1,19 @@
 ﻿namespace DataMapper.SqlServerDAO
 {
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-    class SQLServerDAOFactory : IDAOFactory
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Provides a factory for creating SQL Server data services.
+    /// </summary>
+    internal class SQLServerDAOFactory : IDAOFactory
     {
+        /// <summary>
+        /// Gets the course data services.
+        /// </summary>
         public ICourseDataServices CourseDataServices
         {
             get
@@ -15,6 +22,9 @@ using System.Threading.Tasks;
             }
         }
 
+        /// <summary>
+        /// Gets the student data services.
+        /// </summary>
         public IStudentDataServices StudentDataServices
         {
             get
@@ -23,6 +33,9 @@ using System.Threading.Tasks;
             }
         }
 
+        /// <summary>
+        /// Gets the semester data services.
+        /// </summary>
         public ISemesterDataServices SemesterDataServices
         {
             get
@@ -31,19 +44,25 @@ using System.Threading.Tasks;
             }
         }
 
-        public IEnrollmentDataServices EnrollmentDataServices
+        /// <summary>
+        /// Gets the exam data services.
+        /// </summary>
+        public IExamDataServices ExamDataServices
         {
             get
             {
-                return new SQLEnrollmentDataServices();
+                return new SQLExamDataServices();
             }
         }
 
-        public IPrerequisiteDataServices PrerequisiteDataServices
+        /// <summary>
+        /// Gets the discount data services.
+        /// </summary>
+        public IDiscountDataServices DiscountDataServices
         {
             get
             {
-                return new SQLPrerequisiteDataServices();
+                return new SQLDiscountDataServices();
             }
         }
     }

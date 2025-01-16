@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DomainModel.Models;
-
-namespace DataMapper.SqlServerDAO
+﻿namespace DataMapper.SqlServerDAO
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using DomainModel.Models;
+
     /// <summary>
     /// Provides data services for semesters.
     /// </summary>

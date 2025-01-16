@@ -81,8 +81,7 @@
   <ItemGroup>
     <Compile Include="CourseTests.cs" />
     <Compile Include="DiscountTests.cs" />
-    <Compile Include="EnrollmentTests.cs" />
-    <Compile Include="PrerequisiteTests.cs" />
+    <Compile Include="ExamTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SemesterTests.cs" />
     <Compile Include="StudentTests.cs" />

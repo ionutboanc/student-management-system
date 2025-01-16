@@ -7,7 +7,7 @@
     /// <summary>
     /// Provides data services for courses.
     /// </summary>
-    internal class SQLCourseDataServices : ICourseDataServices
+    public class SQLCourseDataServices : ICourseDataServices
     {
         /// <summary>
         /// Adds a course.

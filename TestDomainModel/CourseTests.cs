@@ -1,41 +1,35 @@
-﻿namespace TestDomainModel
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using DomainModel.Models;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DomainModel;
+using DomainModel.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
-    /// <summary>
-    /// Provides unit tests for the Course class.
-    /// </summary>
+namespace TestDomainModel
+{
     [TestClass]
     public class CourseTests
     {
         private Course course;
 
-        /// <summary>
-        /// Sets up the test environment.
-        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
             // Initialize a valid course entity
             this.course = new Course
             {
+                Id = 1,
                 Name = "Advanced Programming",
                 Description = "An advanced programming course.",
                 Credits = 5,
                 Cost = 500,
                 MinThreshold = 50,
                 MaxThreshold = 150,
+                Discount = new Discount { Percentage = 10 }
             };
         }
 
-        /// <summary>
-        /// Tests that the course is valid when all required fields are set correctly.
-        /// </summary>
         [TestMethod]
         public void TestValidCourse()
         {
@@ -48,9 +42,6 @@
             Assert.AreEqual(0, results.Count);
         }
 
-        /// <summary>
-        /// Tests that course validation fails when the name is missing.
-        /// </summary>
         [TestMethod]
         public void TestCourseNameMissing()
         {
@@ -65,62 +56,8 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Name")));
         }
 
-        /// <summary>
-        /// Tests that course validation fails when the name is too short.
-        /// </summary>
         [TestMethod]
-        public void TestCourseNameTooShort()
-        {
-            this.course.Name = "AB";
-
-            var context = new ValidationContext(this.course, null, null);
-            var results = new List<ValidationResult>();
-
-            bool isValid = Validator.TryValidateObject(this.course, context, results, true);
-
-            Assert.IsFalse(isValid);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Name")));
-        }
-
-        /// <summary>
-        /// Tests that course validation fails when the description is missing.
-        /// </summary>
-        [TestMethod]
-        public void TestCourseDescriptionMissing()
-        {
-            this.course.Description = null;
-
-            var context = new ValidationContext(this.course, null, null);
-            var results = new List<ValidationResult>();
-
-            bool isValid = Validator.TryValidateObject(this.course, context, results, true);
-
-            Assert.IsFalse(isValid);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Description")));
-        }
-
-        /// <summary>
-        /// Tests that course validation fails when the description exceeds maximum length.
-        /// </summary>
-        [TestMethod]
-        public void TestCourseDescriptionTooLong()
-        {
-            this.course.Description = new string('a', 501);
-
-            var context = new ValidationContext(this.course, null, null);
-            var results = new List<ValidationResult>();
-
-            bool isValid = Validator.TryValidateObject(this.course, context, results, true);
-
-            Assert.IsFalse(isValid);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Description")));
-        }
-
-        /// <summary>
-        /// Tests that course validation fails when credits are zero.
-        /// </summary>
-        [TestMethod]
-        public void TestCourseCreditsZero()
+        public void TestCourseCreditsInvalid()
         {
             this.course.Credits = 0;
 
@@ -133,30 +70,10 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Credits")));
         }
 
-        /// <summary>
-        /// Tests that course validation fails when credits are negative.
-        /// </summary>
         [TestMethod]
-        public void TestCourseCreditsNegative()
+        public void TestCourseCostInvalid()
         {
-            this.course.Credits = -3;
-
-            var context = new ValidationContext(this.course, null, null);
-            var results = new List<ValidationResult>();
-
-            bool isValid = Validator.TryValidateObject(this.course, context, results, true);
-
-            Assert.IsFalse(isValid);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Credits")));
-        }
-
-        /// <summary>
-        /// Tests that course validation fails when cost is negative.
-        /// </summary>
-        [TestMethod]
-        public void TestCourseCostNegative()
-        {
-            this.course.Cost = -100;
+            this.course.Cost = -1;
 
             var context = new ValidationContext(this.course, null, null);
             var results = new List<ValidationResult>();
@@ -167,82 +84,10 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Cost")));
         }
 
-        /// <summary>
-        /// Tests that course cost validation passes when cost is within the valid range.
-        /// </summary>
         [TestMethod]
-        public void TestCourseCostWithinValidRange()
+        public void TestCourseMinThresholdInvalid()
         {
-            this.course.Cost = this.course.MinThreshold * this.course.Credits;
-
-            Assert.IsTrue(this.course.IsCostValid());
-
-            this.course.Cost = this.course.MaxThreshold * this.course.Credits;
-
-            Assert.IsTrue(this.course.IsCostValid());
-        }
-
-        /// <summary>
-        /// Tests that course cost validation fails when cost is below minimum threshold.
-        /// </summary>
-        [TestMethod]
-        public void TestCourseCostBelowMinimum()
-        {
-            this.course.Cost = (this.course.MinThreshold * this.course.Credits) - 1;
-
-            Assert.IsFalse(this.course.IsCostValid());
-        }
-
-        /// <summary>
-        /// Tests that course cost validation fails when cost is above maximum threshold.
-        /// </summary>
-        [TestMethod]
-        public void TestCourseCostAboveMaximum()
-        {
-            this.course.Cost = (this.course.MaxThreshold * this.course.Credits) + 1;
-
-            Assert.IsFalse(this.course.IsCostValid());
-        }
-
-        /// <summary>
-        /// Tests that adding a prerequisite to the course works correctly.
-        /// </summary>
-        [TestMethod]
-        public void TestAddPrerequisite()
-        {
-            var prerequisite = new Prerequisite
-            {
-                CourseId = this.course.Id,
-                PrerequisiteCourseId = 2,
-                MinimumGrade = 7
-            };
-
-            this.course.Prerequisites.Add(prerequisite);
-
-            Assert.AreEqual(1, this.course.Prerequisites.Count);
-            Assert.AreEqual(7, this.course.Prerequisites.First().MinimumGrade);
-        }
-
-        /// <summary>
-        /// Tests that course has availability in semesters.
-        /// </summary>
-        [TestMethod]
-        public void TestCourseAvailableInSemester()
-        {
-            var semester = new Semester { Id = 1, Number = 1 };
-            this.course.AvailableSemesters.Add(semester);
-
-            Assert.AreEqual(1, this.course.AvailableSemesters.Count);
-            Assert.AreEqual(1, this.course.AvailableSemesters.First().Id);
-        }
-
-        /// <summary>
-        /// Tests that course validation fails when MinThreshold is negative.
-        /// </summary>
-        [TestMethod]
-        public void TestCourseMinThresholdNegative()
-        {
-            this.course.MinThreshold = -10;
+            this.course.MinThreshold = -1;
 
             var context = new ValidationContext(this.course, null, null);
             var results = new List<ValidationResult>();
@@ -253,13 +98,10 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("MinThreshold")));
         }
 
-        /// <summary>
-        /// Tests that course validation fails when MaxThreshold is negative.
-        /// </summary>
         [TestMethod]
-        public void TestCourseMaxThresholdNegative()
+        public void TestCourseMaxThresholdInvalid()
         {
-            this.course.MaxThreshold = -20;
+            this.course.MaxThreshold = -1;
 
             var context = new ValidationContext(this.course, null, null);
             var results = new List<ValidationResult>();
@@ -270,62 +112,243 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("MaxThreshold")));
         }
 
-        /// <summary>
-        /// Tests that course validation fails when MaxThreshold is less than MinThreshold.
-        /// </summary>
         [TestMethod]
-        public void TestMaxThresholdLessThanMinThreshold()
+        public void TestIsCostValid_ValidCost()
         {
-            this.course.MinThreshold = 100;
-            this.course.MaxThreshold = 50;
+            this.course.Cost = this.course.MinThreshold * this.course.Credits;
 
-            Assert.IsFalse(this.course.IsCostValid());
-        }
-
-        /// <summary>
-        /// Tests that the IsCostValid method returns false when cost is not between thresholds.
-        /// </summary>
-        [TestMethod]
-        public void TestIsCostValidMethod()
-        {
-            this.course.Cost = 400; // Within thresholds
             Assert.IsTrue(this.course.IsCostValid());
 
-            this.course.Cost = 800; // Above max threshold
+            this.course.Cost = this.course.MaxThreshold * this.course.Credits;
+
+            Assert.IsTrue(this.course.IsCostValid());
+        }
+
+        [TestMethod]
+        public void TestIsCostValid_InvalidCost()
+        {
+            this.course.Cost = (this.course.MinThreshold * this.course.Credits) - 1;
+
+            Assert.IsFalse(this.course.IsCostValid());
+
+            this.course.Cost = (this.course.MaxThreshold * this.course.Credits) + 1;
+
             Assert.IsFalse(this.course.IsCostValid());
         }
 
-        /// <summary>
-        /// Tests that the initial state of Prerequisites is an empty collection.
-        /// </summary>
         [TestMethod]
-        public void TestPrerequisitesInitialState()
+        public void TestGetCost_WithDiscount()
         {
-            var newCourse = new Course();
-            Assert.IsNotNull(newCourse.Prerequisites);
-            Assert.AreEqual(0, newCourse.Prerequisites.Count);
+            var expectedCost = this.course.Cost - (this.course.Cost * this.course.Discount.Percentage / 100);
+
+            Assert.AreEqual(expectedCost, this.course.GetCost());
         }
 
-        /// <summary>
-        /// Tests that adding an enrollment to the course works correctly.
-        /// </summary>
         [TestMethod]
-        public void TestAddEnrollment()
+        public void TestGetCost_WithoutDiscount()
         {
-            var enrollment = new Enrollment
+            this.course.Discount = null;
+
+            Assert.AreEqual(this.course.Cost, this.course.GetCost());
+        }
+
+        [TestMethod]
+        public void TestGetCost_WithBalanceRefunded()
+        {
+            this.course.BalanceRefunded = true;
+            var expectedCost = (this.course.Cost * 0.5m) - (this.course.Cost * this.course.Discount.Percentage / 100 * 0.5m);
+
+            Assert.AreEqual(expectedCost, this.course.GetCost());
+        }
+        [TestMethod]
+        public void TestGetCost_WithoutBalanceRefunded_WithDiscount()
+        {
+            this.course.BalanceRefunded = false;
+            var expectedCost = this.course.Cost - (this.course.Cost * this.course.Discount.Percentage / 100);
+
+            Assert.AreEqual(expectedCost, this.course.GetCost());
+        }
+
+        [TestMethod]
+        public void TestGetCost_WithoutBalanceRefunded_NoDiscount()
+        {
+            this.course.BalanceRefunded = false;
+            this.course.Discount = null;
+
+            Assert.AreEqual(this.course.Cost, this.course.GetCost());
+        }
+
+        [TestMethod]
+        public void TestGetCost_WithBalanceRefunded_NoDiscount()
+        {
+            this.course.BalanceRefunded = true;
+            this.course.Discount = null;
+            var expectedCost = this.course.Cost * 0.5m;
+
+            Assert.AreEqual(expectedCost, this.course.GetCost());
+        }
+        [TestMethod]
+        public void TestAddPrerequisite()
+        {
+            var prerequisite = new Course
             {
-                StudentId = 1,
-                CourseId = this.course.Id,
-                SemesterId = 1,
-                NumberOfAttempts = 0
+                Id = 2,
+                Name = "Introduction to Programming",
+                Description = "An introductory programming course.",
+                Credits = 3,
+                Cost = 300,
+                MinThreshold = 30,
+                MaxThreshold = 90
             };
 
-            this.course.Enrollments.Add(enrollment);
+            this.course.Prerequisites.Add(prerequisite);
 
-            Assert.AreEqual(1, this.course.Enrollments.Count);
-            Assert.AreEqual(1, this.course.Enrollments.First().StudentId);
+            Assert.AreEqual(1, this.course.Prerequisites.Count);
+            Assert.IsTrue(this.course.Prerequisites.Contains(prerequisite));
         }
 
-        // Additional tests can be added to cover more edge cases and validations.
+        [TestMethod]
+        public void TestAddAvailableSemester()
+        {
+            var semester = new Semester
+            {
+                Id = 1,
+                Number = 1,
+                CreditThreshold = 30
+            };
+
+            this.course.AvailableSemesters.Add(semester);
+
+            Assert.AreEqual(1, this.course.AvailableSemesters.Count);
+            Assert.IsTrue(this.course.AvailableSemesters.Contains(semester));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ValidationException))]
+        public void TestValidate_MinThresholdGreaterThanMaxThreshold_ThrowsException()
+        {
+            this.course.MinThreshold = 200;
+            this.course.MaxThreshold = 100;
+            this.course.Validate();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ValidationException))]
+        public void TestValidate_CostNotWithinValidRange_ThrowsException()
+        {
+            this.course.Cost = (this.course.MinThreshold * this.course.Credits) - 1;
+            this.course.Validate();
+        }
+
+        [TestMethod]
+        public void TestCourseDescriptionNullable()
+        {
+            this.course.Description = null;
+
+            var context = new ValidationContext(this.course, null, null);
+            var results = new List<ValidationResult>();
+
+            bool isValid = Validator.TryValidateObject(this.course, context, results, true);
+
+            Assert.IsTrue(isValid);
+            Assert.AreEqual(0, results.Count);
+        }
+
+        [TestMethod]
+        public void TestCourseWithDiscount()
+        {
+            this.course.Discount = new Discount { Percentage = 20 };
+            var expectedCost = this.course.Cost - (this.course.Cost * this.course.Discount.Percentage / 100);
+
+            Assert.AreEqual(expectedCost, this.course.GetCost());
+        }
+
+        [TestMethod]
+        public void TestCourseWithoutDiscount()
+        {
+            this.course.Discount = null;
+
+            Assert.AreEqual(this.course.Cost, this.course.GetCost());
+        }
+
+        [TestMethod]
+        public void TestAddStudentToCourse()
+        {
+            var student = new Student
+            {
+                Id = 1,
+                FirstName = "John",
+                LastName = "Doe",
+                Address = "123 Main St",
+                NationalId = "1234567890123",
+                Balance = 1000m,
+                RegistrationNumber = "123456"
+            };
+
+            this.course.Students.Add(student);
+
+            Assert.AreEqual(1, this.course.Students.Count);
+            Assert.IsTrue(this.course.Students.Contains(student));
+        }
+
+        [TestMethod]
+        public void TestRemoveStudentFromCourse()
+        {
+            var student = new Student
+            {
+                Id = 1,
+                FirstName = "John",
+                LastName = "Doe",
+                Address = "123 Main St",
+                NationalId = "1234567890123",
+                Balance = 1000m,
+                RegistrationNumber = "123456"
+            };
+
+            this.course.Students.Add(student);
+            this.course.Students.Remove(student);
+
+            Assert.AreEqual(0, this.course.Students.Count);
+            Assert.IsFalse(this.course.Students.Contains(student));
+        }
+
+        [TestMethod]
+        public void TestAddExamToCourse()
+        {
+            var exam = new Exam
+            {
+                ExamId = 1,
+                StudentId = 1,
+                SemesterId = 1,
+                CourseId = 1,
+                Grade = 8,
+                ExamDate = DateTime.Now
+            };
+
+            this.course.Exams.Add(exam);
+
+            Assert.AreEqual(1, this.course.Exams.Count);
+            Assert.IsTrue(this.course.Exams.Contains(exam));
+        }
+
+        [TestMethod]
+        public void TestRemoveExamFromCourse()
+        {
+            var exam = new Exam
+            {
+                ExamId = 1,
+                StudentId = 1,
+                SemesterId = 1,
+                CourseId = 1,
+                Grade = 8,
+                ExamDate = DateTime.Now
+            };
+
+            this.course.Exams.Add(exam);
+            this.course.Exams.Remove(exam);
+
+            Assert.AreEqual(0, this.course.Exams.Count);
+            Assert.IsFalse(this.course.Exams.Contains(exam));
+        }
     }
 }

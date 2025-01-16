@@ -1,0 +1,48 @@
+﻿namespace ServiceLayer
+{
+    using System.Collections.Generic;
+    using DomainModel.Models;
+
+    /// <summary>
+    /// Provides an interface for discount services.
+    /// </summary>
+    public interface IDiscountService
+    {
+        /// <summary>
+        /// Adds a new discount.
+        /// </summary>
+        /// <param name="discount">The discount to add.</param>
+        void AddDiscount(Discount discount);
+
+        /// <summary>
+        /// Updates an existing discount.
+        /// </summary>
+        /// <param name="discount">The discount to update.</param>
+        void UpdateDiscount(Discount discount);
+
+        /// <summary>
+        /// Deletes a discount.
+        /// </summary>
+        /// <param name="discount">The discount to delete.</param>
+        void DeleteDiscount(Discount discount);
+
+        /// <summary>
+        /// Gets a discount by its ID.
+        /// </summary>
+        /// <param name="discountId">The ID of the discount.</param>
+        /// <returns>The discount with the specified ID.</returns>
+        Discount GetDiscountById(int discountId);
+
+        /// <summary>
+        /// Gets all discounts.
+        /// </summary>
+        /// <returns>A list of all discounts.</returns>
+        IList<Discount> GetAllDiscounts();
+
+        /// <summary>
+        /// Validates a discount.
+        /// </summary>
+        /// <param name="discount">The discount to validate.</param>
+        void ValidateDiscount(Discount discount);
+    }
+}

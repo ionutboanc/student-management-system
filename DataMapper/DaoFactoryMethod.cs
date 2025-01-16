@@ -1,46 +1,47 @@
-﻿using DataMapper.SqlServerDAO;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataMapper
+﻿namespace DataMapper
 {
+    using System;
+    using System.Configuration;
+    using DataMapper.SqlServerDAO;
+
+    /// <summary>
+    /// Provides a method to get the current DAO factory.
+    /// </summary>
     public static class DAOFactoryMethod
     {
-        private static readonly IDAOFactory _currentDAOFactory;
+        /// <summary>
+        /// The current DAO factory instance.
+        /// </summary>
+        private static readonly IDAOFactory CurrentDaoFactory;
 
-        /// <summary>Initializes the <see cref="DAOFactoryMethod" /> class.</summary>
+        /// <summary>
+        /// Initializes static members of the <see cref="DAOFactoryMethod"/> class.
+        /// </summary>
         static DAOFactoryMethod()
         {
             string currentDataProvider = ConfigurationManager.AppSettings["dataProvider"];
-            if (String.IsNullOrWhiteSpace(currentDataProvider))
+            if (string.IsNullOrWhiteSpace(currentDataProvider))
             {
-                _currentDAOFactory = null;
+                CurrentDaoFactory = null;
             }
             else
             {
-                switch(currentDataProvider.ToLower().Trim())
+                switch (currentDataProvider.ToLower().Trim())
                 {
                     case "sqlserver":
-                        _currentDAOFactory = new SQLServerDAOFactory();
+                        CurrentDaoFactory = new SQLServerDAOFactory();
                         break;
                     default:
-                        _currentDAOFactory = new SQLServerDAOFactory();
+                        CurrentDaoFactory = new SQLServerDAOFactory();
                         break;
                 }
             }
         }
-        /// <summary>Gets the current DAO factory.</summary>
+
+        /// <summary>
+        /// Gets the current DAO factory.
+        /// </summary>
         /// <value>The current DAO factory.</value>
-        public static IDAOFactory CurrentDAOFactory
-        {
-            get
-            {
-                return _currentDAOFactory;
-            }
-        }
+        public static IDAOFactory CurrentDAOFactory => CurrentDaoFactory;
     }
 }

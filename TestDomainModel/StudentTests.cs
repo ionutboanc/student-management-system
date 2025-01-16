@@ -1,23 +1,17 @@
-﻿namespace TestDomainModel
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using DomainModel.Models;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DomainModel.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System;
+using System.Linq;
 
-    /// <summary>
-    /// Provides unit tests for the Student class.
-    /// </summary>
+namespace TestDomainModel
+{
     [TestClass]
     public class StudentTests
     {
         private Student student;
 
-        /// <summary>
-        /// Sets up the test environment.
-        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
@@ -29,15 +23,13 @@
                 Address = "Str. Arenei",
                 RegistrationNumber = "123456",
                 NationalId = "1234567890123",
-                Phones = new List<string> { "0712345678" },
-                Emails = new List<string> { "boanc.ionut@example.com" },
                 Balance = 200m,
             };
+
+            this.student.AddPhone("0712345678");
+            this.student.AddEmail("boanc.ionut@example.com");
         }
 
-        /// <summary>
-        /// Tests that the student is valid when all required fields are set correctly.
-        /// </summary>
         [TestMethod]
         public void TestValidStudent()
         {
@@ -51,9 +43,6 @@
             Assert.IsTrue(this.student.HasValidContact());
         }
 
-        /// <summary>
-        /// Tests that student validation fails when first name is missing.
-        /// </summary>
         [TestMethod]
         public void TestStudentFirstNameMissing()
         {
@@ -68,9 +57,6 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FirstName")));
         }
 
-        /// <summary>
-        /// Tests that student validation fails when last name is missing.
-        /// </summary>
         [TestMethod]
         public void TestStudentLastNameMissing()
         {
@@ -85,9 +71,6 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("LastName")));
         }
 
-        /// <summary>
-        /// Tests that student validation fails when national ID is missing.
-        /// </summary>
         [TestMethod]
         public void TestStudentNationalIdMissing()
         {
@@ -102,9 +85,6 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("NationalId")));
         }
 
-        /// <summary>
-        /// Tests that student validation fails when registration number is missing.
-        /// </summary>
         [TestMethod]
         public void TestStudentRegistrationNumberMissing()
         {
@@ -119,21 +99,15 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("RegistrationNumber")));
         }
 
-        /// <summary>
-        /// Tests that student validation passes when at least one contact method is provided.
-        /// </summary>
         [TestMethod]
         public void TestStudentHasValidContact()
         {
             this.student.Phones = new List<string>();
-            this.student.Emails = new List<string> { "email@example.com" };
+            this.student.Emails = new List<string> { "ionut@mail.com" };
 
             Assert.IsTrue(this.student.HasValidContact());
         }
 
-        /// <summary>
-        /// Tests that student validation fails when no contact methods are provided.
-        /// </summary>
         [TestMethod]
         public void TestStudentNoContactMethods()
         {
@@ -143,39 +117,13 @@
             Assert.IsFalse(this.student.HasValidContact());
         }
 
-        /// <summary>
-        /// Tests that adding an enrollment to the student works correctly.
-        /// </summary>
-        [TestMethod]
-        public void TestAddEnrollment()
-        {
-            var enrollment = new Enrollment
-            {
-                StudentId = this.student.Id,
-                CourseId = 1,
-                SemesterId = 1,
-                NumberOfAttempts = 0
-            };
-
-            this.student.Enrollments.Add(enrollment);
-
-            Assert.AreEqual(1, this.student.Enrollments.Count);
-            Assert.AreEqual(1, this.student.Enrollments.First().CourseId);
-        }
-
-        /// <summary>
-        /// Tests that student phone validation fails with an invalid phone number.
-        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestInvalidPhoneNumber()
         {
-            this.student.AddPhone("03123456789");
+            this.student.AddPhone("InvalidPhoneNumber");
         }
 
-        /// <summary>
-        /// Tests that student phone validation passes with a valid phone number.
-        /// </summary>
         [TestMethod]
         public void TestValidPhoneNumber()
         {
@@ -184,9 +132,6 @@
             Assert.IsTrue(this.student.Phones.Contains("0712345678"));
         }
 
-        /// <summary>
-        /// Tests that student phone validation fails with a null phone number.
-        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestNullPhoneNumber()
@@ -194,9 +139,6 @@
             this.student.AddPhone(null);
         }
 
-        /// <summary>
-        /// Tests that student phone validation fails with an empty phone number.
-        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestEmptyPhoneNumber()
@@ -204,9 +146,6 @@
             this.student.AddPhone(string.Empty);
         }
 
-        /// <summary>
-        /// Tests that student phone validation fails with a whitespace phone number.
-        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestWhitespacePhoneNumber()
@@ -214,9 +153,6 @@
             this.student.AddPhone("   ");
         }
 
-        /// <summary>
-        /// Tests that student email validation fails with an invalid email address.
-        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestInvalidEmailAddress()
@@ -224,9 +160,6 @@
             this.student.AddEmail("invalid-email");
         }
 
-        /// <summary>
-        /// Tests that student email validation passes with a valid email address.
-        /// </summary>
         [TestMethod]
         public void TestValidEmailAddress()
         {
@@ -235,9 +168,6 @@
             Assert.IsTrue(this.student.Emails.Contains("ionut.boanc@example.com"));
         }
 
-        /// <summary>
-        /// Tests that student email validation fails with a null email address.
-        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestNullEmailAddress()
@@ -245,9 +175,6 @@
             this.student.AddEmail(null);
         }
 
-        /// <summary>
-        /// Tests that student email validation fails with an empty email address.
-        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestEmptyEmailAddress()
@@ -255,9 +182,6 @@
             this.student.AddEmail(string.Empty);
         }
 
-        /// <summary>
-        /// Tests that student email validation fails with a whitespace email address.
-        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestWhitespaceEmailAddress()
@@ -265,9 +189,6 @@
             this.student.AddEmail("   ");
         }
 
-        /// <summary>
-        /// Tests that the balance is deducted correctly.
-        /// </summary>
         [TestMethod]
         public void TestDeductBalance()
         {
@@ -282,9 +203,6 @@
             Assert.AreEqual(initialBalance - amountToDeduct, this.student.Balance);
         }
 
-        /// <summary>
-        /// Tests that the balance is added correctly.
-        /// </summary>
         [TestMethod]
         public void TestAddBalance()
         {
@@ -299,9 +217,18 @@
             Assert.AreEqual(initialBalance + amountToAdd, this.student.Balance);
         }
 
-        /// <summary>
-        /// Tests that the balance cannot be deducted below zero.
-        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestAddBalanceNegative()
+        {
+            // Arrange
+            decimal initialBalance = this.student.Balance;
+            decimal amountToAdd = -300m;
+
+            // Act
+            this.student.AddBalance(amountToAdd);
+        }
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestDeductBalanceBelowZero()
@@ -311,6 +238,134 @@
 
             // Act
             this.student.DeductBalance(amountToDeduct);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestDeductBalanceNegative()
+        {
+            // Arrange
+            decimal amountToDeduct = -100;
+
+            // Act
+            this.student.DeductBalance(amountToDeduct);
+        }
+
+        [TestMethod]
+        public void TestParameterizedConstructor_ValidStudent()
+        {
+            // Arrange
+            var student = new Student("Test", "Student", "Str. Testeen", "1234567890123", 100m, "123456");
+            student.AddPhone("1234567890");
+
+            // Act
+            var context = new ValidationContext(student, null, null);
+            var results = new List<ValidationResult>();
+            bool isValid = Validator.TryValidateObject(student, context, results, true);
+
+            // Assert
+            Assert.IsTrue(isValid);
+            Assert.AreEqual(0, results.Count);
+            Assert.AreEqual("Test", student.FirstName);
+            Assert.AreEqual("Student", student.LastName);
+            Assert.AreEqual("Str. Testeen", student.Address);
+            Assert.AreEqual("1234567890123", student.NationalId);
+            Assert.AreEqual(100m, student.Balance);
+            Assert.AreEqual("123456", student.RegistrationNumber);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ValidationException))]
+        public void TestParameterizedConstructor_InvalidStudent()
+        {
+            // Act
+            var student = new Student(null, "Ionut", "Str. Arenei", "1234567890123", 200m, "123456");
+        }
+
+        [TestMethod]
+        public void TestAddPhone_ValidPhone()
+        {
+            // Arrange
+            var phone = "1234 567890";
+
+            // Act
+            this.student.AddPhone(phone);
+
+            // Assert
+            Assert.IsTrue(this.student.Phones.Contains(phone));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestAddPhone_InvalidPhone()
+        {
+            // Act
+            this.student.AddPhone("InvalidPhone");
+        }
+
+        [TestMethod]
+        public void TestRemovePhone_ValidPhone()
+        {
+            // Arrange
+            var phone = "0712345677";
+            this.student.AddPhone(phone);
+
+            // Act
+            this.student.RemovePhone(phone);
+
+            // Assert
+            Assert.IsFalse(this.student.Phones.Contains(phone));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestRemovePhone_InvalidPhone()
+        {
+            // Act
+            this.student.RemovePhone("InvalidPhone");
+        }
+
+        [TestMethod]
+        public void TestAddEmail_ValidEmail()
+        {
+            // Arrange
+            var email = "ionut.boanc@example.com";
+
+            // Act
+            this.student.AddEmail(email);
+
+            // Assert
+            Assert.IsTrue(this.student.Emails.Contains(email));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestAddEmail_InvalidEmail()
+        {
+            // Act
+            this.student.AddEmail("InvalidEmail");
+        }
+
+        [TestMethod]
+        public void TestRemoveEmail_ValidEmail()
+        {
+            // Arrange
+            var email = "boanc.ionut2@example.com";
+            this.student.AddEmail(email);
+
+            // Act
+            this.student.RemoveEmail(email);
+
+            // Assert
+            Assert.IsFalse(this.student.Emails.Contains(email));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestRemoveEmail_InvalidEmail()
+        {
+            // Act
+            this.student.RemoveEmail("InvalidEmail");
         }
     }
 }

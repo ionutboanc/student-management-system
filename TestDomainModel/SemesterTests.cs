@@ -1,38 +1,54 @@
-﻿namespace TestDomainModel
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using DomainModel.Models;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DomainModel.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
-    /// <summary>
-    /// Provides unit tests for the Semester class.
-    /// </summary>
+namespace TestDomainModel
+{
     [TestClass]
     public class SemesterTests
     {
         private Semester semester;
 
-        /// <summary>
-        /// Sets up the test environment.
-        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
             // Initialize a valid semester entity
             this.semester = new Semester
             {
+                Id = 1,
                 Number = 1,
-                CreditThreshold = 15,
-                AvailableCourses = new List<Course>()
+                CreditThreshold = 30,
+                AvailableCourses = new List<Course>
+                {
+                    new Course
+                    {
+                        Id = 1,
+                        Name = "Advanced Programming",
+                        Description = "An advanced programming course.",
+                        Credits = 5,
+                        Cost = 500,
+                        MinThreshold = 50,
+                        MaxThreshold = 150
+                    }
+                },
+                Students = new List<Student>
+                {
+                    new Student
+                    {
+                        Id = 1,
+                        FirstName = "John",
+                        LastName = "Doe",
+                        Address = "123 Main St",
+                        NationalId = "1234567890123",
+                        Balance = 1000m,
+                        RegistrationNumber = "123456"
+                    }
+                }
             };
         }
 
-        /// <summary>
-        /// Tests that the semester is valid when all required fields are set correctly.
-        /// </summary>
         [TestMethod]
         public void TestValidSemester()
         {
@@ -45,11 +61,8 @@
             Assert.AreEqual(0, results.Count);
         }
 
-        /// <summary>
-        /// Tests that semester validation fails when Number is zero.
-        /// </summary>
         [TestMethod]
-        public void TestSemesterNumberZero()
+        public void TestSemesterNumberInvalid()
         {
             this.semester.Number = 0;
 
@@ -62,13 +75,10 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Number")));
         }
 
-        /// <summary>
-        /// Tests that semester validation fails when CreditThreshold is negative.
-        /// </summary>
         [TestMethod]
-        public void TestSemesterCreditThresholdNegative()
+        public void TestCreditThresholdInvalid()
         {
-            this.semester.CreditThreshold = -5;
+            this.semester.CreditThreshold = -1;
 
             var context = new ValidationContext(this.semester, null, null);
             var results = new List<ValidationResult>();
@@ -79,49 +89,223 @@
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("CreditThreshold")));
         }
 
-        /// <summary>
-        /// Tests adding a course to the semester's available courses.
-        /// </summary>
         [TestMethod]
-        public void TestAddAvailableCourse()
+        public void TestAddCourseToSemester()
         {
-            var course = new Course { Id = 1, Name = "Mathematics", Credits = 5 };
-            this.semester.AvailableCourses.Add(course);
+            var newCourse = new Course
+            {
+                Id = 2,
+                Name = "Introduction to Programming",
+                Description = "An introductory programming course.",
+                Credits = 3,
+                Cost = 300,
+                MinThreshold = 30,
+                MaxThreshold = 90
+            };
 
-            Assert.AreEqual(1, this.semester.AvailableCourses.Count);
-            Assert.AreEqual("Mathematics", this.semester.AvailableCourses.First().Name);
+            this.semester.AvailableCourses.Add(newCourse);
+
+            Assert.AreEqual(2, this.semester.AvailableCourses.Count);
+            Assert.IsTrue(this.semester.AvailableCourses.Contains(newCourse));
+        }
+
+        [TestMethod]
+        public void TestAddStudentToSemester()
+        {
+            var newStudent = new Student
+            {
+                Id = 2,
+                FirstName = "Jane",
+                LastName = "Doe",
+                Address = "456 Main St",
+                NationalId = "9876543210987",
+                Balance = 500m,
+                RegistrationNumber = "654321"
+            };
+
+            this.semester.Students.Add(newStudent);
+
+            Assert.AreEqual(2, this.semester.Students.Count);
+            Assert.IsTrue(this.semester.Students.Contains(newStudent));
+        }
+
+        [TestMethod]
+        public void TestRemoveCourseFromSemester()
+        {
+            var courseToRemove = this.semester.AvailableCourses.First();
+
+            this.semester.AvailableCourses.Remove(courseToRemove);
+
+            Assert.AreEqual(0, this.semester.AvailableCourses.Count);
+            Assert.IsFalse(this.semester.AvailableCourses.Contains(courseToRemove));
+        }
+
+        [TestMethod]
+        public void TestRemoveStudentFromSemester()
+        {
+            var studentToRemove = this.semester.Students.First();
+
+            this.semester.Students.Remove(studentToRemove);
+
+            Assert.AreEqual(0, this.semester.Students.Count);
+            Assert.IsFalse(this.semester.Students.Contains(studentToRemove));
         }
 
         /// <summary>
-        /// Tests that the total credits of available courses meet the credit threshold.
+        /// Tests validating a semester with valid data.
         /// </summary>
         [TestMethod]
-        public void TestAvailableCoursesMeetCreditThreshold()
+        public void TestValidate_ValidSemester()
         {
-            var course1 = new Course { Id = 1, Name = "Course 1", Credits = 5 };
-            var course2 = new Course { Id = 2, Name = "Course 2", Credits = 5 };
-            var course3 = new Course { Id = 3, Name = "Course 3", Credits = 5 };
+            // Arrange
+            var semester = new Semester
+            {
+                Id = 1,
+                Number = 1,
+                CreditThreshold = 10,
+                AvailableCourses = new List<Course>
+                {
+                    new Course { Id = 1, Name = "Course 1", Credits = 5 },
+                    new Course { Id = 2, Name = "Course 2", Credits = 5 }
+                },
+                Students = new List<Student>
+                {
+                    new Student { Id = 1, FirstName = "John", LastName = "Doe" }
+                }
+            };
 
-            this.semester.AvailableCourses.Add(course1);
-            this.semester.AvailableCourses.Add(course2);
-            this.semester.AvailableCourses.Add(course3);
-
-            int totalCredits = this.semester.AvailableCourses.Sum(c => c.Credits);
-
-            Assert.IsTrue(totalCredits >= this.semester.CreditThreshold);
+            // Act & Assert
+            semester.Validate();
         }
 
         /// <summary>
-        /// Tests that the initial state of AvailableCourses is an empty collection.
+        /// Tests validating a semester with no available courses.
         /// </summary>
         [TestMethod]
-        public void TestAvailableCoursesInitialState()
+        [ExpectedException(typeof(ValidationException), "Semester must have at least one available course.")]
+        public void TestValidate_NoAvailableCourses_ThrowsException()
         {
-            var newSemester = new Semester();
-            Assert.IsNotNull(newSemester.AvailableCourses);
-            Assert.AreEqual(0, newSemester.AvailableCourses.Count);
+            // Arrange
+            var semester = new Semester
+            {
+                Id = 1,
+                Number = 1,
+                CreditThreshold = 10,
+                AvailableCourses = new List<Course>(),
+                Students = new List<Student>
+                {
+                    new Student { Id = 1, FirstName = "John", LastName = "Doe" }
+                }
+            };
+
+            // Act & Assert
+            semester.Validate();
         }
 
-        // Additional tests can be added to cover more complex scenarios.
+        /// <summary>
+        /// Tests validating a semester with no students.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ValidationException), "Semester must have at least one student.")]
+        public void TestValidate_NoStudents_ThrowsException()
+        {
+            // Arrange
+            var semester = new Semester
+            {
+                Id = 1,
+                Number = 1,
+                CreditThreshold = 10,
+                AvailableCourses = new List<Course>
+                {
+                    new Course { Id = 1, Name = "Course 1", Credits = 5 },
+                    new Course { Id = 2, Name = "Course 2", Credits = 5 }
+                },
+                Students = new List<Student>()
+            };
+
+            // Act & Assert
+            semester.Validate();
+        }
+
+        /// <summary>
+        /// Tests validating a semester with total credits less than the credit threshold.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ValidationException), "The total credits of the available courses (5) must be equal to or more than the credit threshold (10).")]
+        public void TestValidate_TotalCreditsLessThanThreshold_ThrowsException()
+        {
+            // Arrange
+            var semester = new Semester
+            {
+                Id = 1,
+                Number = 1,
+                CreditThreshold = 10,
+                AvailableCourses = new List<Course>
+                {
+                    new Course { Id = 1, Name = "Course 1", Credits = 5 }
+                },
+                Students = new List<Student>
+                {
+                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" }
+                }
+            };
+
+            // Act & Assert
+            semester.Validate();
+        }
+
+        /// <summary>
+        /// Tests validating a semester with total credits equal to the credit threshold.
+        /// </summary>
+        [TestMethod]
+        public void TestValidate_TotalCreditsEqualToThreshold()
+        {
+            // Arrange
+            var semester = new Semester
+            {
+                Id = 1,
+                Number = 1,
+                CreditThreshold = 10,
+                AvailableCourses = new List<Course>
+                {
+                    new Course { Id = 1, Name = "Course 1", Credits = 5 },
+                    new Course { Id = 2, Name = "Course 2", Credits = 5 }
+                },
+                Students = new List<Student>
+                {
+                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" }
+                }
+            };
+
+            // Act & Assert
+            semester.Validate();
+        }
+
+        /// <summary>
+        /// Tests validating a semester with total credits more than the credit threshold.
+        /// </summary>
+        [TestMethod]
+        public void TestValidate_TotalCreditsMoreThanThreshold()
+        {
+            // Arrange
+            var semester = new Semester
+            {
+                Id = 1,
+                Number = 1,
+                CreditThreshold = 10,
+                AvailableCourses = new List<Course>
+                {
+                    new Course { Id = 1, Name = "Course 1", Credits = 5 },
+                    new Course { Id = 2, Name = "Course 2", Credits = 6 }
+                },
+                Students = new List<Student>
+                {
+                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" }
+                }
+            };
+
+            // Act & Assert
+            semester.Validate();
+        }
     }
 }

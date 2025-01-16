@@ -94,12 +94,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CourseServicesTests.cs" />
-    <Compile Include="EnrollmentServicesTests.cs" />
-    <Compile Include="PrerequisiteServicesTests.cs" />
+    <Compile Include="CourseServiceTests.cs" />
+    <Compile Include="DiscountServiceTests.cs" />
+    <Compile Include="ExamServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SemesterServicesTests.cs" />
-    <Compile Include="StudentServicesTests.cs" />
+    <Compile Include="SemesterServiceTests.cs" />
+    <Compile Include="StudentServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataMapper\DataMapper.csproj">
@@ -113,6 +113,10 @@
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj">
       <Project>{2cbccb17-9b7c-4d71-809f-6aaed41f925e}</Project>
       <Name>ServiceLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{54ADD8DF-DEF0-479F-9D25-BA26B4E2191C}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

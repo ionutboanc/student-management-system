@@ -1,10 +1,7 @@
-﻿// <copyright file="MyApplicationContext.cs" company="Transilvania University of Brasov">
-// Copyright (c) Transilvania University of Brasov. All rights reserved.
-// </copyright>
-
-namespace DataMapper.SqlServerDAO
+﻿namespace DataMapper.SqlServerDAO
 {
     using System.Data.Entity;
+    using DomainModel;
     using DomainModel.Models;
 
     /// <summary>
@@ -12,72 +9,111 @@ namespace DataMapper.SqlServerDAO
     /// </summary>
     public class MyApplicationContext : DbContext
     {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="MyApplicationContext"/> class.
-            /// </summary>
-            public MyApplicationContext()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MyApplicationContext"/> class.
+        /// </summary>
+        public MyApplicationContext()
             : base("myConStr")
-            {
-            }
-
-            /// <summary>
-            /// Gets or sets the Students.
-            /// </summary>
-            public virtual DbSet<Student> Students { get; set; }
-
-            /// <summary>
-            /// Gets or sets the Courses.
-            /// </summary>
-            public virtual DbSet<Course> Courses { get; set; }
-
-            /// <summary>
-            /// Gets or sets the Semesters.
-            /// </summary>
-            public virtual DbSet<Semester> Semesters { get; set; }
-
-            /// <summary>
-            /// Gets or sets the Enrollments.
-            /// </summary>
-            public virtual DbSet<Enrollment> Enrollments { get; set; }
-
-            /// <summary>
-            /// Gets or sets the Prerequisites.
-            /// </summary>
-            public virtual DbSet<Prerequisite> Prerequisites { get; set; }
-
-            /// <summary>
-            /// Configures the model.
-            /// </summary>
-            /// <param name="modelBuilder">The model builder.</param>
-            protected override void OnModelCreating(DbModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<Course>()
-                    .HasMany(c => c.Prerequisites)
-                    .WithRequired(p => p.Course)
-                    .HasForeignKey(p => p.CourseId)
-                    .WillCascadeOnDelete(false);
-
-                modelBuilder.Entity<Course>()
-                    .HasMany(c => c.AvailableSemesters)
-                    .WithMany(s => s.AvailableCourses)
-                    .Map(cs =>
-                    {
-                        cs.MapLeftKey("CourseId");
-                        cs.MapRightKey("SemesterId");
-                        cs.ToTable("CourseSemesters");
-                    });
-
-                modelBuilder.Entity<Student>()
-                    .HasMany(s => s.Enrollments)
-                    .WithRequired(e => e.Student)
-                    .HasForeignKey(e => e.StudentId);
-
-                modelBuilder.Entity<Course>()
-                    .HasMany(c => c.Enrollments)
-                    .WithRequired(e => e.Course)
-                    .HasForeignKey(e => e.CourseId);
-
-                base.OnModelCreating(modelBuilder);
-            }
+        {
         }
+
+        /// <summary>
+        /// Gets or sets the Students.
+        /// </summary>
+        public virtual DbSet<Student> Students { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Courses.
+        /// </summary>
+        public virtual DbSet<Course> Courses { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Semesters.
+        /// </summary>
+        public virtual DbSet<Semester> Semesters { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Discounts.
+        /// </summary>
+        public virtual DbSet<Discount> Discounts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Exams.
+        /// </summary>
+        public virtual DbSet<Exam> Exams { get; set; }
+
+        /// <summary>
+        /// Configures the model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            // Many-to-Many: Prerequisites between courses
+            modelBuilder.Entity<Course>()
+                .HasMany(c => c.Prerequisites)
+                .WithMany()
+                .Map(m =>
+                {
+                    m.MapLeftKey("CourseId");
+                    m.MapRightKey("PrerequisiteId");
+                    m.ToTable("CoursePrerequisites");
+                });
+
+            // Many-to-Many: Courses <-> Semesters
+            modelBuilder.Entity<Course>()
+                .HasMany(c => c.AvailableSemesters)
+                .WithMany(s => s.AvailableCourses)
+                .Map(m =>
+                {
+                    m.MapLeftKey("CourseId");
+                    m.MapRightKey("SemesterId");
+                    m.ToTable("CourseSemesters");
+                });
+
+            // One-to-Many: Discount -> Courses
+            modelBuilder.Entity<Discount>()
+                .HasMany(d => d.Courses)
+                .WithOptional(c => c.Discount)
+                .HasForeignKey(c => c.DiscountId);
+
+            // Many-to-Many: Students <-> Courses
+            modelBuilder.Entity<Student>()
+                .HasMany(s => s.EnrolledCourses)
+                .WithMany(c => c.Students)
+                .Map(m =>
+                {
+                    m.MapLeftKey("StudentId");
+                    m.MapRightKey("CourseId");
+                    m.ToTable("StudentCourses");
+                });
+
+            // One-to-Many: Exam -> Student
+            modelBuilder.Entity<Exam>()
+                .HasRequired(e => e.Student)
+                .WithMany(s => s.Exams)
+                .HasForeignKey(e => e.StudentId)
+                .WillCascadeOnDelete(true);
+
+            // One-to-Many: Exam -> Course
+            modelBuilder.Entity<Exam>()
+                .HasRequired(e => e.Course)
+                .WithMany(c => c.Exams)
+                .HasForeignKey(e => e.CourseId)
+                .WillCascadeOnDelete(false);
+
+            // One-to-Many: Exam -> Semester
+            modelBuilder.Entity<Exam>()
+                .HasRequired(e => e.Semester)
+                .WithMany(s => s.Exams)
+                .HasForeignKey(e => e.SemesterId)
+                .WillCascadeOnDelete(false);
+
+            // One-to-Many: Student -> Semester
+            modelBuilder.Entity<Student>()
+                .HasOptional(s => s.CurrentSemester)
+                .WithMany(s => s.Students)
+                .HasForeignKey(s => s.CurrentSemesterId)
+                .WillCascadeOnDelete(false);
+        }
+    }
 }
