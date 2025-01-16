@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿#pragma warning disable // Suppress all warnings
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

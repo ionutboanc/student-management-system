@@ -81,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ICourseDataServices.cs" />
     <Compile Include="DAOFactoryMethod.cs" />
     <Compile Include="IDAOFactory.cs" />
@@ -88,9 +89,9 @@
     <Compile Include="IExamDataServices.cs" />
     <Compile Include="ISemesterDataServices.cs" />
     <Compile Include="IStudentDataServices.cs" />
-    <Compile Include="Migrations\202501070735283_Refactor.cs" />
-    <Compile Include="Migrations\202501070735283_Refactor.Designer.cs">
-      <DependentUpon>202501070735283_Refactor.cs</DependentUpon>
+    <Compile Include="Migrations\202501160950300_Final.cs" />
+    <Compile Include="Migrations\202501160950300_Final.Designer.cs">
+      <DependentUpon>202501160950300_Final.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SqlServerDAO\SQLDiscountDataServices.cs" />
@@ -120,8 +121,8 @@
     <Analyzer Include="..\packages\xunit.analyzers.1.16.0\analyzers\dotnet\cs\xunit.analyzers.fixes.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202501070735283_Refactor.resx">
-      <DependentUpon>202501070735283_Refactor.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202501160950300_Final.resx">
+      <DependentUpon>202501160950300_Final.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

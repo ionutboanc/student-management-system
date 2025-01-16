@@ -1,4 +1,8 @@
-﻿namespace DataMapper.SqlServerDAO
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace DataMapper.SqlServerDAO
 {
     using System.Collections.Generic;
     using System.Linq;

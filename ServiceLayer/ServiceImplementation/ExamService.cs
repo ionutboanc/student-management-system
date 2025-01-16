@@ -1,4 +1,8 @@
-﻿namespace ServiceLayer.ServiceImplementation
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace ServiceLayer.ServiceImplementation
 {
     using System;
     using System.Collections.Generic;
@@ -79,6 +83,7 @@
                 Logger.Error("Exam ID must be greater than zero.", new ArgumentOutOfRangeException(nameof(examId), "Exam ID must be greater than zero."));
                 throw new ArgumentOutOfRangeException(nameof(examId), "Exam ID must be greater than zero.");
             }
+
             return DAOFactoryMethod.CurrentDAOFactory.ExamDataServices.GetExamById(examId);
         }
 
@@ -137,6 +142,7 @@
             {
                 return true;
             }
+
             return false;
         }
 
@@ -175,6 +181,7 @@
                     DAOFactoryMethod.CurrentDAOFactory.CourseDataServices.UpdateCourse(exam.Course);
                     DAOFactoryMethod.CurrentDAOFactory.StudentDataServices.UpdateStudent(exam.Student);
                 }
+
                 Logger.Error($"The student has already taken the exam for this course {Constants.MaxNumberOfAttempts} times.", new ValidationException($"The student has already taken the exam for this course {Constants.MaxNumberOfAttempts} times."));
                 throw new ValidationException($"The student has already taken the exam for this course {Constants.MaxNumberOfAttempts} times.");
             }

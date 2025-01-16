@@ -1,4 +1,8 @@
-﻿namespace DataMapper
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace DataMapper
 {
     using System;
     using System.Configuration;
@@ -42,6 +46,12 @@
         /// Gets the current DAO factory.
         /// </summary>
         /// <value>The current DAO factory.</value>
-        public static IDAOFactory CurrentDAOFactory => CurrentDaoFactory;
+        public static IDAOFactory CurrentDAOFactory
+        {
+            get
+            {
+                return CurrentDaoFactory;
+            }
+        }
     }
 }

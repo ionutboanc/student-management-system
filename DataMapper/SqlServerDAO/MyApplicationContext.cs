@@ -1,4 +1,8 @@
-﻿namespace DataMapper.SqlServerDAO
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace DataMapper.SqlServerDAO
 {
     using System.Data.Entity;
     using DomainModel;
@@ -13,7 +17,7 @@
         /// Initializes a new instance of the <see cref="MyApplicationContext"/> class.
         /// </summary>
         public MyApplicationContext()
-            : base("myConStr")
+    : base("server=VIVOBOOK-IONUT; database=student_db; Trusted_Connection=True;")
         {
         }
 

@@ -1,30 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using DataMapper;
-using DomainModel;
-using DomainModel.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using ServiceLayer;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace TestServiceLayer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using DataMapper;
+    using DomainModel;
+    using DomainModel.Models;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
+    using ServiceLayer;
+
     /// <summary>
-    /// Unit tests for the CourseService class.
+    /// Unit tests for the <see cref="CourseService"/> class.
     /// </summary>
     [TestClass]
     public class CourseServiceTests
     {
+        /// <summary>
+        /// Mock for course data services.
+        /// </summary>
         private Mock<ICourseDataServices> mockDataServices;
+
+        /// <summary>
+        /// Mock for student data services.
+        /// </summary>
         private Mock<IStudentDataServices> mockStudentDataServices;
+
+        /// <summary>
+        /// Mock for DAO factory.
+        /// </summary>
         private Mock<IDAOFactory> mockDAOFactory;
+
+        /// <summary>
+        /// The course service instance used for testing.
+        /// </summary>
         private CourseService courseService;
+
+        /// <summary>
+        /// The test course instance.
+        /// </summary>
         private Course testCourse;
+
+        /// <summary>
+        /// The test discount instance.
+        /// </summary>
         private Discount testDiscount;
+
+        /// <summary>
+        /// The test student instance.
+        /// </summary>
         private Student testStudent;
+
+        /// <summary>
+        /// The test exam instance.
+        /// </summary>
         private Exam testExam;
+
+        /// <summary>
+        /// The test semester instance.
+        /// </summary>
         private Semester testSemester;
 
         /// <summary>
@@ -41,7 +80,7 @@ namespace TestServiceLayer
             // Set up the mock DAOFactory to return the mock data services
             this.mockDAOFactory.Setup(factory => factory.CourseDataServices).Returns(this.mockDataServices.Object);
             this.mockDAOFactory.Setup(factory => factory.StudentDataServices).Returns(this.mockStudentDataServices.Object);
-            typeof(DAOFactoryMethod).GetField("_currentDAOFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, this.mockDAOFactory.Object);
+            typeof(DAOFactoryMethod).GetField("CurrentDaoFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, this.mockDAOFactory.Object);
 
             this.testDiscount = new Discount { Percentage = 10 };
 
@@ -522,7 +561,7 @@ namespace TestServiceLayer
                 Cost = 300,
                 MinThreshold = 30,
                 MaxThreshold = 90,
-                Prerequisites = new List<Course> { this.testCourse } 
+                Prerequisites = new List<Course> { this.testCourse },
             };
             this.testCourse.Prerequisites.Add(prerequisite);
 

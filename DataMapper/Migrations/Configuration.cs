@@ -1,4 +1,6 @@
-﻿namespace DataMapper.Migrations
+﻿#pragma warning disable // Suppress all warnings
+
+namespace DataMapper.Migrations
 {
     using System;
     using System.Data.Entity;

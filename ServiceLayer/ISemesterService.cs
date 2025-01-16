@@ -1,4 +1,8 @@
-﻿namespace ServiceLayer
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace ServiceLayer
 {
     using System.Collections.Generic;
     using DomainModel.Models;

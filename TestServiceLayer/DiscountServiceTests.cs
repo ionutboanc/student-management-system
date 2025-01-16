@@ -1,25 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using DataMapper;
-using DomainModel.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using ServiceLayer.ServiceImplementation;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace TestServiceLayer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using DataMapper;
+    using DomainModel.Models;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
+    using ServiceLayer.ServiceImplementation;
+
     /// <summary>
-    /// Unit tests for the DiscountService class.
+    /// Unit tests for the <see cref="DiscountService"/> class.
     /// </summary>
     [TestClass]
     public class DiscountServiceTests
     {
+        /// <summary>
+        /// Mock for discount data services.
+        /// </summary>
         private Mock<IDiscountDataServices> mockDataServices;
+
+        /// <summary>
+        /// Mock for DAO factory.
+        /// </summary>
         private Mock<IDAOFactory> mockDAOFactory;
+
+        /// <summary>
+        /// The discount service instance used for testing.
+        /// </summary>
         private DiscountService discountService;
+
+        /// <summary>
+        /// The test discount instance.
+        /// </summary>
         private Discount testDiscount;
+
+        /// <summary>
+        /// The test course instance.
+        /// </summary>
         private Course testCourse;
 
         /// <summary>
@@ -34,7 +57,7 @@ namespace TestServiceLayer
 
             // Set up the mock DAOFactory to return the mock data services
             this.mockDAOFactory.Setup(factory => factory.DiscountDataServices).Returns(this.mockDataServices.Object);
-            typeof(DAOFactoryMethod).GetField("_currentDAOFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, this.mockDAOFactory.Object);
+            typeof(DAOFactoryMethod).GetField("CurrentDaoFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, this.mockDAOFactory.Object);
 
             // Initialize a valid course entity
             this.testCourse = new Course
@@ -45,7 +68,7 @@ namespace TestServiceLayer
                 Credits = 5,
                 Cost = 500,
                 MinThreshold = 50,
-                MaxThreshold = 150
+                MaxThreshold = 150,
             };
 
             // Initialize a valid discount entity
@@ -53,7 +76,7 @@ namespace TestServiceLayer
             {
                 Id = 1,
                 Percentage = 10,
-                Courses = new List<Course> { this.testCourse }
+                Courses = new List<Course> { this.testCourse },
             };
         }
 
@@ -158,12 +181,18 @@ namespace TestServiceLayer
             Assert.AreEqual(1, result.Count);
         }
 
+        /// <summary>
+        /// Tests getting all discounts when there are no discounts.
+        /// </summary>
+        [TestMethod]
         public void TestGetAllDiscounts_NoDiscounts()
         {
             // Arrange
             this.mockDataServices.Setup(repo => repo.GetAllDiscounts()).Returns(new List<Discount>());
+
             // Act
             var result = this.discountService.GetAllDiscounts();
+
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Count);
@@ -247,7 +276,7 @@ namespace TestServiceLayer
             {
                 Id = 2,
                 Percentage = 15,
-                Courses = new List<Course>()
+                Courses = new List<Course>(),
             };
 
             // Act
@@ -269,7 +298,7 @@ namespace TestServiceLayer
             {
                 Id = 2,
                 Percentage = 15,
-                Courses = new List<Course>()
+                Courses = new List<Course>(),
             };
 
             // Act

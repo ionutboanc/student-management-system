@@ -1,17 +1,30 @@
-﻿using DomainModel.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System;
-using System.Linq;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace TestDomainModel
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using DomainModel.Models;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    /// <summary>
+    /// Contains unit tests for the <see cref="Student"/> class.
+    /// </summary>
     [TestClass]
     public class StudentTests
     {
+        /// <summary>
+        /// The student instance used for testing.
+        /// </summary>
         private Student student;
 
+        /// <summary>
+        /// Sets up the test environment.
+        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
@@ -30,6 +43,9 @@ namespace TestDomainModel
             this.student.AddEmail("boanc.ionut@example.com");
         }
 
+        /// <summary>
+        /// Tests if a valid student passes validation.
+        /// </summary>
         [TestMethod]
         public void TestValidStudent()
         {
@@ -43,6 +59,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.student.HasValidContact());
         }
 
+        /// <summary>
+        /// Tests if a student with a missing first name fails validation.
+        /// </summary>
         [TestMethod]
         public void TestStudentFirstNameMissing()
         {
@@ -57,6 +76,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FirstName")));
         }
 
+        /// <summary>
+        /// Tests if a student with a missing last name fails validation.
+        /// </summary>
         [TestMethod]
         public void TestStudentLastNameMissing()
         {
@@ -71,6 +93,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("LastName")));
         }
 
+        /// <summary>
+        /// Tests if a student with a missing national ID fails validation.
+        /// </summary>
         [TestMethod]
         public void TestStudentNationalIdMissing()
         {
@@ -85,6 +110,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("NationalId")));
         }
 
+        /// <summary>
+        /// Tests if a student with a missing registration number fails validation.
+        /// </summary>
         [TestMethod]
         public void TestStudentRegistrationNumberMissing()
         {
@@ -99,6 +127,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("RegistrationNumber")));
         }
 
+        /// <summary>
+        /// Tests if a student has at least one valid contact method.
+        /// </summary>
         [TestMethod]
         public void TestStudentHasValidContact()
         {
@@ -108,6 +139,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.student.HasValidContact());
         }
 
+        /// <summary>
+        /// Tests if a student with no contact methods fails validation.
+        /// </summary>
         [TestMethod]
         public void TestStudentNoContactMethods()
         {
@@ -117,6 +151,9 @@ namespace TestDomainModel
             Assert.IsFalse(this.student.HasValidContact());
         }
 
+        /// <summary>
+        /// Tests adding an invalid phone number.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestInvalidPhoneNumber()
@@ -124,6 +161,9 @@ namespace TestDomainModel
             this.student.AddPhone("InvalidPhoneNumber");
         }
 
+        /// <summary>
+        /// Tests adding a valid phone number.
+        /// </summary>
         [TestMethod]
         public void TestValidPhoneNumber()
         {
@@ -132,6 +172,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.student.Phones.Contains("0712345678"));
         }
 
+        /// <summary>
+        /// Tests adding a null phone number.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestNullPhoneNumber()
@@ -139,6 +182,9 @@ namespace TestDomainModel
             this.student.AddPhone(null);
         }
 
+        /// <summary>
+        /// Tests adding an empty phone number.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestEmptyPhoneNumber()
@@ -146,6 +192,9 @@ namespace TestDomainModel
             this.student.AddPhone(string.Empty);
         }
 
+        /// <summary>
+        /// Tests adding a whitespace phone number.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestWhitespacePhoneNumber()
@@ -153,6 +202,9 @@ namespace TestDomainModel
             this.student.AddPhone("   ");
         }
 
+        /// <summary>
+        /// Tests adding an invalid email address.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestInvalidEmailAddress()
@@ -160,6 +212,9 @@ namespace TestDomainModel
             this.student.AddEmail("invalid-email");
         }
 
+        /// <summary>
+        /// Tests adding a valid email address.
+        /// </summary>
         [TestMethod]
         public void TestValidEmailAddress()
         {
@@ -168,6 +223,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.student.Emails.Contains("ionut.boanc@example.com"));
         }
 
+        /// <summary>
+        /// Tests adding a null email address.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestNullEmailAddress()
@@ -175,6 +233,9 @@ namespace TestDomainModel
             this.student.AddEmail(null);
         }
 
+        /// <summary>
+        /// Tests adding an empty email address.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestEmptyEmailAddress()
@@ -182,6 +243,9 @@ namespace TestDomainModel
             this.student.AddEmail(string.Empty);
         }
 
+        /// <summary>
+        /// Tests adding a whitespace email address.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestWhitespaceEmailAddress()
@@ -189,6 +253,9 @@ namespace TestDomainModel
             this.student.AddEmail("   ");
         }
 
+        /// <summary>
+        /// Tests deducting balance from the student.
+        /// </summary>
         [TestMethod]
         public void TestDeductBalance()
         {
@@ -203,6 +270,9 @@ namespace TestDomainModel
             Assert.AreEqual(initialBalance - amountToDeduct, this.student.Balance);
         }
 
+        /// <summary>
+        /// Tests adding balance to the student.
+        /// </summary>
         [TestMethod]
         public void TestAddBalance()
         {
@@ -217,6 +287,9 @@ namespace TestDomainModel
             Assert.AreEqual(initialBalance + amountToAdd, this.student.Balance);
         }
 
+        /// <summary>
+        /// Tests adding a negative balance to the student.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestAddBalanceNegative()
@@ -229,6 +302,9 @@ namespace TestDomainModel
             this.student.AddBalance(amountToAdd);
         }
 
+        /// <summary>
+        /// Tests deducting balance below zero.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestDeductBalanceBelowZero()
@@ -240,6 +316,9 @@ namespace TestDomainModel
             this.student.DeductBalance(amountToDeduct);
         }
 
+        /// <summary>
+        /// Tests deducting a negative balance from the student.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestDeductBalanceNegative()
@@ -251,6 +330,9 @@ namespace TestDomainModel
             this.student.DeductBalance(amountToDeduct);
         }
 
+        /// <summary>
+        /// Tests the parameterized constructor with a valid student.
+        /// </summary>
         [TestMethod]
         public void TestParameterizedConstructor_ValidStudent()
         {
@@ -274,6 +356,9 @@ namespace TestDomainModel
             Assert.AreEqual("123456", student.RegistrationNumber);
         }
 
+        /// <summary>
+        /// Tests the parameterized constructor with an invalid student.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestParameterizedConstructor_InvalidStudent()
@@ -282,6 +367,9 @@ namespace TestDomainModel
             var student = new Student(null, "Ionut", "Str. Arenei", "1234567890123", 200m, "123456");
         }
 
+        /// <summary>
+        /// Tests adding a valid phone number to the student.
+        /// </summary>
         [TestMethod]
         public void TestAddPhone_ValidPhone()
         {
@@ -295,6 +383,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.student.Phones.Contains(phone));
         }
 
+        /// <summary>
+        /// Tests adding an invalid phone number to the student.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestAddPhone_InvalidPhone()
@@ -303,6 +394,9 @@ namespace TestDomainModel
             this.student.AddPhone("InvalidPhone");
         }
 
+        /// <summary>
+        /// Tests removing a valid phone number from the student.
+        /// </summary>
         [TestMethod]
         public void TestRemovePhone_ValidPhone()
         {
@@ -317,6 +411,9 @@ namespace TestDomainModel
             Assert.IsFalse(this.student.Phones.Contains(phone));
         }
 
+        /// <summary>
+        /// Tests removing an invalid phone number from the student.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestRemovePhone_InvalidPhone()
@@ -325,6 +422,9 @@ namespace TestDomainModel
             this.student.RemovePhone("InvalidPhone");
         }
 
+        /// <summary>
+        /// Tests adding a valid email address to the student.
+        /// </summary>
         [TestMethod]
         public void TestAddEmail_ValidEmail()
         {
@@ -338,6 +438,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.student.Emails.Contains(email));
         }
 
+        /// <summary>
+        /// Tests adding an invalid email address to the student.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestAddEmail_InvalidEmail()
@@ -346,6 +449,9 @@ namespace TestDomainModel
             this.student.AddEmail("InvalidEmail");
         }
 
+        /// <summary>
+        /// Tests removing a valid email address from the student.
+        /// </summary>
         [TestMethod]
         public void TestRemoveEmail_ValidEmail()
         {
@@ -360,6 +466,9 @@ namespace TestDomainModel
             Assert.IsFalse(this.student.Emails.Contains(email));
         }
 
+        /// <summary>
+        /// Tests removing an invalid email address from the student.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestRemoveEmail_InvalidEmail()

@@ -1,4 +1,8 @@
-﻿namespace DomainModel.Models
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace DomainModel.Models
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +14,36 @@
     /// </summary>
     public class Student
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Student"/> class.
+        /// </summary>
+        public Student()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Student"/> class with specified parameters.
+        /// </summary>
+        /// <param name="firstName">The first name of the student.</param>
+        /// <param name="lastName">The last name of the student.</param>
+        /// <param name="address">The address of the student.</param>
+        /// <param name="nationalId">The national ID of the student.</param>
+        /// <param name="balance">The balance of the student.</param>
+        /// <param name="registrationNumber">The registration number of the student.</param>
+        /// <param name="currentSemesterId">The current semester ID of the student.</param>
+        public Student(string firstName, string lastName, string address, string nationalId, decimal balance, string registrationNumber, int? currentSemesterId = null)
+        {
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Address = address;
+            this.NationalId = nationalId;
+            this.Balance = balance;
+            this.RegistrationNumber = registrationNumber;
+            this.CurrentSemesterId = currentSemesterId;
+
+            this.Validate();
+        }
+
         /// <summary>
         /// Gets or sets the ID of the student.
         /// </summary>
@@ -87,36 +121,6 @@
         /// Gets or sets the list of courses the student is enrolled in.
         /// </summary>
         public IList<Course> EnrolledCourses { get; set; } = new List<Course>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Student"/> class.
-        /// </summary>
-        public Student()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Student"/> class with specified parameters.
-        /// </summary>
-        /// <param name="firstName">The first name of the student.</param>
-        /// <param name="lastName">The last name of the student.</param>
-        /// <param name="address">The address of the student.</param>
-        /// <param name="nationalId">The national ID of the student.</param>
-        /// <param name="balance">The balance of the student.</param>
-        /// <param name="registrationNumber">The registration number of the student.</param>
-        /// <param name="currentSemesterId">The current semester ID of the student.</param>
-        public Student(string firstName, string lastName, string address, string nationalId, decimal balance, string registrationNumber, int? currentSemesterId = null)
-        {
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Address = address;
-            this.NationalId = nationalId;
-            this.Balance = balance;
-            this.RegistrationNumber = registrationNumber;
-            this.CurrentSemesterId = currentSemesterId;
-
-            this.Validate();
-        }
 
         /// <summary>
         /// Checks if the student has at least one valid contact method (phone or email).

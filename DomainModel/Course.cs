@@ -1,4 +1,8 @@
-﻿namespace DomainModel.Models
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace DomainModel.Models
 {
     using System;
     using System.Collections.Generic;
@@ -9,6 +13,36 @@
     /// </summary>
     public class Course
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Course"/> class.
+        /// </summary>
+        public Course()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Course"/> class with specified parameters.
+        /// </summary>
+        /// <param name="id">The ID of the course.</param>
+        /// <param name="name">The name of the course.</param>
+        /// <param name="description">The description of the course.</param>
+        /// <param name="credits">The number of credits for the course.</param>
+        /// <param name="cost">The cost of the course.</param>
+        /// <param name="minThreshold">The minimum threshold for the course cost.</param>
+        /// <param name="maxThreshold">The maximum threshold for the course cost.</param>
+        public Course(int id, string name, string description, int credits, decimal cost, decimal minThreshold, decimal maxThreshold)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.Description = description;
+            this.Credits = credits;
+            this.Cost = cost;
+            this.MinThreshold = minThreshold;
+            this.MaxThreshold = maxThreshold;
+
+            this.Validate();
+        }
+
         /// <summary>
         /// Gets or sets the ID of the course.
         /// </summary>
@@ -92,36 +126,6 @@
         public List<Exam> Exams { get; set; } = new List<Exam>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Course"/> class.
-        /// </summary>
-        public Course()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Course"/> class with specified parameters.
-        /// </summary>
-        /// <param name="id">The ID of the course.</param>
-        /// <param name="name">The name of the course.</param>
-        /// <param name="description">The description of the course.</param>
-        /// <param name="credits">The number of credits for the course.</param>
-        /// <param name="cost">The cost of the course.</param>
-        /// <param name="minThreshold">The minimum threshold for the course cost.</param>
-        /// <param name="maxThreshold">The maximum threshold for the course cost.</param>
-        public Course(int id, string name, string description, int credits, decimal cost, decimal minThreshold, decimal maxThreshold)
-        {
-            this.Id = id;
-            this.Name = name;
-            this.Description = description;
-            this.Credits = credits;
-            this.Cost = cost;
-            this.MinThreshold = minThreshold;
-            this.MaxThreshold = maxThreshold;
-
-            this.Validate();
-        }
-
-        /// <summary>
         /// Checks if the cost of the course is valid.
         /// </summary>
         /// <returns>True if the cost is valid, otherwise false.</returns>
@@ -141,10 +145,12 @@
             {
                 refundFactor = 0.5m;
             }
+
             if (this.Discount != null)
             {
                 return (this.Cost - (this.Cost * this.Discount.Percentage / 100)) * refundFactor;
             }
+
             return this.Cost * refundFactor;
         }
 

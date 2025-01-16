@@ -1,4 +1,8 @@
-﻿namespace ServiceLayer
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace ServiceLayer
 {
     using System;
     using System.Collections.Generic;
@@ -61,6 +65,7 @@
                 Logger.Error("Course not found.", new ArgumentException("Course not found."));
                 throw new ArgumentException("Course not found.");
             }
+
             DAOFactoryMethod.CurrentDAOFactory.CourseDataServices.DeleteCourse(course);
         }
 
@@ -77,6 +82,7 @@
                 Logger.Error("Course ID must be greater than zero.", new ArgumentOutOfRangeException(nameof(courseId), "Course ID must be greater than zero."));
                 throw new ArgumentOutOfRangeException(nameof(courseId), "Course ID must be greater than zero.");
             }
+
             return DAOFactoryMethod.CurrentDAOFactory.CourseDataServices.GetCourseById(courseId);
         }
 
@@ -103,6 +109,7 @@
                 Logger.Error("Course not found.", new ArgumentException("Course not found."));
                 throw new ArgumentException("Course not found.");
             }
+
             return course.Prerequisites;
         }
 
@@ -119,6 +126,7 @@
                 Logger.Error("Course not found.", new ArgumentException("Course not found."));
                 throw new ArgumentException("Course not found.");
             }
+
             return course.Discount;
         }
 
@@ -168,6 +176,7 @@
                 Logger.Error("Course not found.", new ArgumentException("Course not found."));
                 throw new ArgumentException("Course not found.");
             }
+
             return course.Exams.Select(e => e.Student).Distinct().ToList();
         }
 
@@ -184,6 +193,7 @@
                 Logger.Error("Course not found.", new ArgumentException("Course not found."));
                 throw new ArgumentException("Course not found.");
             }
+
             return course.Exams;
         }
 
@@ -200,6 +210,7 @@
                 Logger.Error("Course not found.", new ArgumentException("Course not found."));
                 throw new ArgumentException("Course not found.");
             }
+
             return course.AvailableSemesters;
         }
 
@@ -216,6 +227,7 @@
                 Logger.Error("Semester not found.", new ArgumentException("Semester not found."));
                 throw new ArgumentException("Semester not found.");
             }
+
             return semester.AvailableCourses;
         }
 
@@ -262,6 +274,7 @@
                 Logger.Error("Course not found.", new ArgumentException("Course not found."));
                 throw new ArgumentException("Course not found.");
             }
+
             return course.Exams.Select(e => e.Student).Distinct().Count();
         }
 

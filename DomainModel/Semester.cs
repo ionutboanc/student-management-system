@@ -1,4 +1,8 @@
-﻿namespace DomainModel.Models
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace DomainModel.Models
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +14,26 @@
     /// </summary>
     public class Semester
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Semester"/> class.
+        /// </summary>
+        public Semester()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Semester"/> class with specified parameters.
+        /// </summary>
+        /// <param name="id">The ID of the semester.</param>
+        /// <param name="number">The number of the semester.</param>
+        /// <param name="creditThreshold">The credit threshold for the semester.</param>
+        public Semester(int id, int number, int creditThreshold)
+        {
+            this.Id = id;
+            this.Number = number;
+            this.CreditThreshold = creditThreshold;
+        }
+
         /// <summary>
         /// Gets or sets the ID of the semester.
         /// </summary>
@@ -42,26 +66,6 @@
         /// Gets or sets the list of exams in the semester.
         /// </summary>
         public virtual List<Exam> Exams { get; set; } = new List<Exam>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Semester"/> class.
-        /// </summary>
-        public Semester()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Semester"/> class with specified parameters.
-        /// </summary>
-        /// <param name="id">The ID of the semester.</param>
-        /// <param name="number">The number of the semester.</param>
-        /// <param name="creditThreshold">The credit threshold for the semester.</param>
-        public Semester(int id, int number, int creditThreshold)
-        {
-            this.Id = id;
-            this.Number = number;
-            this.CreditThreshold = creditThreshold;
-        }
 
         /// <summary>
         /// Validates the semester properties.

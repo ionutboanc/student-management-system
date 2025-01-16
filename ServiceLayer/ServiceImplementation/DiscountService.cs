@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using DataMapper;
-using DomainModel.Models;
-using log4net;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace ServiceLayer.ServiceImplementation
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using DataMapper;
+    using DomainModel.Models;
+    using log4net;
+
     /// <summary>
     /// Provides services for managing discounts.
     /// </summary>
@@ -77,6 +81,7 @@ namespace ServiceLayer.ServiceImplementation
                 Logger.Error("Discount ID must be greater than zero.", new ArgumentOutOfRangeException(nameof(discountId), "Discount ID must be greater than zero."));
                 throw new ArgumentOutOfRangeException(nameof(discountId), "Discount ID must be greater than zero.");
             }
+
             return DAOFactoryMethod.CurrentDAOFactory.DiscountDataServices.GetDiscountById(discountId);
         }
 

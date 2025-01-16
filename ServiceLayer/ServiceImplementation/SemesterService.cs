@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using DataMapper;
-using DomainModel.Models;
-using log4net;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace ServiceLayer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using DataMapper;
+    using DomainModel.Models;
+    using log4net;
+
     /// <summary>
     /// Provides services for managing semesters.
     /// </summary>
@@ -77,6 +81,7 @@ namespace ServiceLayer
                 Logger.Error("Semester ID must be positive.", new ArgumentOutOfRangeException(nameof(semesterId), "Semester ID must be positive."));
                 throw new ArgumentOutOfRangeException(nameof(semesterId), "Semester ID must be positive.");
             }
+
             return DAOFactoryMethod.CurrentDAOFactory.SemesterDataServices.GetSemesterById(semesterId);
         }
 
@@ -93,6 +98,7 @@ namespace ServiceLayer
                 Logger.Error("Semester not found.", new ArgumentException("Semester not found."));
                 throw new ArgumentException("Semester not found.");
             }
+
             return semester.Students;
         }
 
@@ -119,6 +125,7 @@ namespace ServiceLayer
                 Logger.Error("Semester not found.", new ArgumentException("Semester not found."));
                 throw new ArgumentException("Semester not found.");
             }
+
             return semester.AvailableCourses;
         }
 
@@ -136,6 +143,7 @@ namespace ServiceLayer
                 Logger.Error("Semester not found.", new ArgumentException("Semester not found.", nameof(semesterId)));
                 throw new ArgumentException("Semester not found.", nameof(semesterId));
             }
+
             return semester.Students;
         }
 
@@ -152,6 +160,7 @@ namespace ServiceLayer
                 Logger.Error("Current semester not found.", new ArgumentException("Current semester not found."));
                 throw new ArgumentException("Current semester not found.");
             }
+
             return DAOFactoryMethod.CurrentDAOFactory.SemesterDataServices.GetAllSemesters()
                 .FirstOrDefault(s => s.Number == currentSemester.Number - 1);
         }
@@ -169,6 +178,7 @@ namespace ServiceLayer
                 Logger.Error("Current semester not found.", new ArgumentException("Current semester not found."));
                 throw new ArgumentException("Current semester not found.");
             }
+
             return DAOFactoryMethod.CurrentDAOFactory.SemesterDataServices.GetAllSemesters()
                 .FirstOrDefault(s => s.Number == currentSemester.Number + 1);
         }

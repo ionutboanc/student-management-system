@@ -1,4 +1,8 @@
-﻿namespace TestServiceLayer
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace TestServiceLayer
 {
     using System;
     using System.Collections.Generic;
@@ -11,18 +15,55 @@
     using Moq;
     using ServiceLayer;
 
+    /// <summary>
+    /// Unit tests for the <see cref="StudentService"/> class.
+    /// </summary>
     [TestClass]
     public class StudentServiceTests
     {
+        /// <summary>
+        /// Mock for student data services.
+        /// </summary>
         private Mock<IStudentDataServices> mockStudentDataServices;
+
+        /// <summary>
+        /// Mock for course data services.
+        /// </summary>
         private Mock<ICourseDataServices> mockCourseDataServices;
+
+        /// <summary>
+        /// Mock for semester data services.
+        /// </summary>
         private Mock<ISemesterDataServices> mockSemesterDataServices;
+
+        /// <summary>
+        /// Mock for DAO factory.
+        /// </summary>
         private Mock<IDAOFactory> mockDAOFactory;
+
+        /// <summary>
+        /// The student service instance used for testing.
+        /// </summary>
         private StudentService studentService;
+
+        /// <summary>
+        /// The test student instance.
+        /// </summary>
         private Student testStudent;
+
+        /// <summary>
+        /// The test course instance.
+        /// </summary>
         private Course testCourse;
+
+        /// <summary>
+        /// The test semester instance.
+        /// </summary>
         private Semester testSemester;
 
+        /// <summary>
+        /// Sets up the test environment.
+        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
@@ -36,7 +77,7 @@
             this.mockDAOFactory.Setup(factory => factory.StudentDataServices).Returns(this.mockStudentDataServices.Object);
             this.mockDAOFactory.Setup(factory => factory.CourseDataServices).Returns(this.mockCourseDataServices.Object);
             this.mockDAOFactory.Setup(factory => factory.SemesterDataServices).Returns(this.mockSemesterDataServices.Object);
-            typeof(DAOFactoryMethod).GetField("_currentDAOFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, this.mockDAOFactory.Object);
+            typeof(DAOFactoryMethod).GetField("CurrentDaoFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, this.mockDAOFactory.Object);
 
             // Initialize a valid student entity
             this.testStudent = new Student
@@ -79,6 +120,9 @@
             };
         }
 
+        /// <summary>
+        /// Tests adding a student.
+        /// </summary>
         [TestMethod]
         public void TestAddStudent()
         {
@@ -89,6 +133,9 @@
             this.mockStudentDataServices.Verify(repo => repo.AddStudent(this.testStudent), Times.Once);
         }
 
+        /// <summary>
+        /// Tests updating a student.
+        /// </summary>
         [TestMethod]
         public void TestUpdateStudent()
         {
@@ -99,6 +146,9 @@
             this.mockStudentDataServices.Verify(repo => repo.UpdateStudent(this.testStudent), Times.Once);
         }
 
+        /// <summary>
+        /// Tests deleting a student.
+        /// </summary>
         [TestMethod]
         public void TestDeleteStudent()
         {
@@ -109,6 +159,9 @@
             this.mockStudentDataServices.Verify(repo => repo.DeleteStudent(this.testStudent), Times.Once);
         }
 
+        /// <summary>
+        /// Tests deleting a student with a null student.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestDeleteStudent_Null_ThrowsException()
@@ -117,6 +170,9 @@
             this.studentService.DeleteStudent(null);
         }
 
+        /// <summary>
+        /// Tests getting a student by ID.
+        /// </summary>
         [TestMethod]
         public void TestGetStudentById()
         {
@@ -131,6 +187,9 @@
             Assert.AreEqual("Ionut", result.FirstName);
         }
 
+        /// <summary>
+        /// Tests getting a student by an invalid ID.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestGetStudentById_InvalidId_ThrowsException()
@@ -139,6 +198,9 @@
             this.studentService.GetStudentById(-1);
         }
 
+        /// <summary>
+        /// Tests getting all students.
+        /// </summary>
         [TestMethod]
         public void TestGetAllStudents()
         {
@@ -154,6 +216,9 @@
             Assert.AreEqual(1, result.Count);
         }
 
+        /// <summary>
+        /// Tests getting a student by national ID.
+        /// </summary>
         [TestMethod]
         public void TestGetStudentByNationalID()
         {
@@ -168,6 +233,9 @@
             Assert.AreEqual("Ionut", result.FirstName);
         }
 
+        /// <summary>
+        /// Tests getting enrolled courses for a student.
+        /// </summary>
         [TestMethod]
         public void TestGetEnrolledCourses()
         {
@@ -182,6 +250,9 @@
             Assert.AreEqual(1, result.Count());
         }
 
+        /// <summary>
+        /// Tests getting exams for a student.
+        /// </summary>
         [TestMethod]
         public void TestGetExamsForStudent()
         {
@@ -207,6 +278,9 @@
             Assert.AreEqual(1, result.Count());
         }
 
+        /// <summary>
+        /// Tests getting the current semester for a student.
+        /// </summary>
         [TestMethod]
         public void TestGetCurrentSemester()
         {
@@ -221,6 +295,9 @@
             Assert.AreEqual(1, result.Number);
         }
 
+        /// <summary>
+        /// Tests calculating the total course costs for a student.
+        /// </summary>
         [TestMethod]
         public void TestCalculateTotalCourseCostsForStudent()
         {
@@ -234,6 +311,9 @@
             Assert.AreEqual(500, result);
         }
 
+        /// <summary>
+        /// Tests enrolling a student in a course.
+        /// </summary>
         [TestMethod]
         public void TestEnrollStudentInCourse()
         {
@@ -245,6 +325,9 @@
             Assert.AreEqual(1, this.testStudent.EnrolledCourses.Count);
         }
 
+        /// <summary>
+        /// Tests enrolling a student in a course when the student is already enrolled.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestEnrollStudentInCourse_AlreadyEnrolled_ThrowsException()
@@ -256,6 +339,9 @@
             this.studentService.EnrollStudentInCourse(this.testStudent, this.testCourse);
         }
 
+        /// <summary>
+        /// Tests removing a student from a course.
+        /// </summary>
         [TestMethod]
         public void TestRemoveStudentFromCourse()
         {
@@ -270,6 +356,9 @@
             Assert.AreEqual(0, this.testStudent.EnrolledCourses.Count);
         }
 
+        /// <summary>
+        /// Tests removing a student from a course when the student is not enrolled.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestRemoveStudentFromCourse_NotEnrolled_ThrowsException()
@@ -278,6 +367,9 @@
             this.studentService.RemoveStudentFromCourse(this.testStudent, this.testCourse);
         }
 
+        /// <summary>
+        /// Tests promoting a student to the next semester successfully.
+        /// </summary>
         [TestMethod]
         public void TestPromoteStudentToNextSemester_Success()
         {
@@ -306,6 +398,9 @@
             Assert.AreEqual(2, this.testStudent.CurrentSemesterId);
         }
 
+        /// <summary>
+        /// Tests promoting a student to the next semester when the student is not found.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestPromoteStudentToNextSemester_StudentNotFound_ThrowsException()
@@ -314,6 +409,9 @@
             this.studentService.PromoteStudentToNextSemester(new Student());
         }
 
+        /// <summary>
+        /// Tests promoting a student to the next semester when the student is null.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestPromoteStudentToNextSemester_StudentNull_ThrowsException()
@@ -322,6 +420,9 @@
             this.studentService.PromoteStudentToNextSemester(null);
         }
 
+        /// <summary>
+        /// Tests promoting a student to the next semester when the current semester is not set.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestPromoteStudentToNextSemester_CurrentSemesterNotSet_ThrowsException()
@@ -333,6 +434,9 @@
             this.studentService.PromoteStudentToNextSemester(this.testStudent);
         }
 
+        /// <summary>
+        /// Tests promoting a student to the next semester when the student does not have enough credits.
+        /// </summary>
         [TestMethod]
         public void TestPromoteStudentToNextSemester_NotEnoughCredits_ReturnsFalse()
         {
@@ -347,6 +451,9 @@
             Assert.IsFalse(result);
         }
 
+        /// <summary>
+        /// Tests promoting a student to the next semester when the next semester is not found.
+        /// </summary>
         [TestMethod]
         public void TestPromoteStudentToNextSemester_NextSemesterNotFound_ReturnsFalse()
         {
@@ -362,6 +469,9 @@
             Assert.IsFalse(result);
         }
 
+        /// <summary>
+        /// Tests getting the credits per semester for a student.
+        /// </summary>
         [TestMethod]
         public void TestGetCreditsPerSemester()
         {
@@ -394,7 +504,7 @@
                 Id = 1,
                 FirstName = "John",
                 LastName = "Doe",
-                EnrolledCourses = new List<Course> { course1, course2, course3 }
+                EnrolledCourses = new List<Course> { course1, course2, course3 },
             };
 
             // Act
@@ -423,7 +533,7 @@
                 Id = 1,
                 FirstName = "John",
                 LastName = "Doe",
-                EnrolledCourses = new List<Course> { course1, course2, course3 }
+                EnrolledCourses = new List<Course> { course1, course2, course3 },
             };
 
             // Act
@@ -436,6 +546,9 @@
             Assert.AreEqual(8, result[2]);
         }
 
+        /// <summary>
+        /// Tests calculating the total cost of courses for a student.
+        /// </summary>
         [TestMethod]
         public void TestCalculateCoursesCostsForStudent()
         {
@@ -449,6 +562,9 @@
             Assert.AreEqual(500, result);
         }
 
+        /// <summary>
+        /// Tests the count students who passed.
+        /// </summary>
         [TestMethod]
         public void TestCountStudentsWhoPassed()
         {
@@ -474,6 +590,10 @@
             // Assert
             Assert.AreEqual(1, result);
         }
+
+        /// <summary>
+        /// Tests the add student null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestAddStudent_NullStudent_ThrowsException()
@@ -482,6 +602,9 @@
             this.studentService.AddStudent(null);
         }
 
+        /// <summary>
+        /// Tests the update student null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestUpdateStudent_NullStudent_ThrowsException()
@@ -490,6 +613,9 @@
             this.studentService.UpdateStudent(null);
         }
 
+        /// <summary>
+        /// Tests the get enrolled courses null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestGetEnrolledCourses_NullStudent_ThrowsException()
@@ -498,6 +624,9 @@
             this.studentService.GetEnrolledCourses(null);
         }
 
+        /// <summary>
+        /// Tests the get exams for student null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestGetExamsForStudent_NullStudent_ThrowsException()
@@ -506,6 +635,9 @@
             this.studentService.GetExamsForStudent(null);
         }
 
+        /// <summary>
+        /// Tests the get current semester null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestGetCurrentSemester_NullStudent_ThrowsException()
@@ -514,6 +646,9 @@
             this.studentService.GetCurrentSemester(null);
         }
 
+        /// <summary>
+        /// Tests the enroll student in course null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestEnrollStudentInCourse_NullStudent_ThrowsException()
@@ -522,6 +657,9 @@
             this.studentService.EnrollStudentInCourse(null, this.testCourse);
         }
 
+        /// <summary>
+        /// Tests the enroll student in course null course throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestEnrollStudentInCourse_NullCourse_ThrowsException()
@@ -530,6 +668,9 @@
             this.studentService.EnrollStudentInCourse(this.testStudent, null);
         }
 
+        /// <summary>
+        /// Tests the enroll student in courses null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestEnrollStudentInCourses_NullStudent_ThrowsException()
@@ -538,6 +679,9 @@
             this.studentService.EnrollStudentInCourses(null, new List<Course> { this.testCourse });
         }
 
+        /// <summary>
+        /// Tests the enroll student in courses null courses throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestEnrollStudentInCourses_NullCourses_ThrowsException()
@@ -546,6 +690,9 @@
             this.studentService.EnrollStudentInCourses(this.testStudent, null);
         }
 
+        /// <summary>
+        /// Tests the enroll student in courses empty courses throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestEnrollStudentInCourses_EmptyCourses_ThrowsException()
@@ -554,6 +701,9 @@
             this.studentService.EnrollStudentInCourses(this.testStudent, new List<Course>());
         }
 
+        /// <summary>
+        /// Tests the enroll student in course missing prerequisites throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestEnrollStudentInCourse_MissingPrerequisites_ThrowsException()
@@ -567,7 +717,7 @@
                 Credits = 3,
                 Cost = 300,
                 MinThreshold = 30,
-                MaxThreshold = 90
+                MaxThreshold = 90,
             };
 
             this.testCourse.Prerequisites.Add(prerequisiteCourse);
@@ -576,6 +726,9 @@
             this.studentService.EnrollStudentInCourse(this.testStudent, this.testCourse);
         }
 
+        /// <summary>
+        /// Tests the enroll student in course with prerequisites success.
+        /// </summary>
         [TestMethod]
         public void TestEnrollStudentInCourse_WithPrerequisites_Success()
         {
@@ -588,7 +741,7 @@
                 Credits = 3,
                 Cost = 300,
                 MinThreshold = 30,
-                MaxThreshold = 90
+                MaxThreshold = 90,
             };
 
             var prerequisiteExam = new Exam
@@ -599,7 +752,7 @@
                 Grade = 8,
                 ExamDate = DateTime.Now,
                 Student = this.testStudent,
-                Course = prerequisiteCourse
+                Course = prerequisiteCourse,
             };
 
             prerequisiteCourse.Exams.Add(prerequisiteExam);
@@ -614,7 +767,9 @@
             Assert.AreEqual(2, this.testStudent.EnrolledCourses.Count);
         }
 
-
+        /// <summary>
+        /// Tests the enroll student in course prerequisite not passed throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestEnrollStudentInCourse_PrerequisiteNotPassed_ThrowsException()
@@ -628,7 +783,7 @@
                 Credits = 3,
                 Cost = 300,
                 MinThreshold = 30,
-                MaxThreshold = 90
+                MaxThreshold = 90,
             };
 
             var prerequisiteExam = new Exam
@@ -639,7 +794,7 @@
                 Grade = 4, // Not passed
                 ExamDate = DateTime.Now,
                 Student = this.testStudent,
-                Course = prerequisiteCourse
+                Course = prerequisiteCourse,
             };
 
             prerequisiteCourse.Exams.Add(prerequisiteExam);
@@ -650,6 +805,9 @@
             this.studentService.EnrollStudentInCourse(this.testStudent, this.testCourse);
         }
 
+        /// <summary>
+        /// Tests the remove student from course null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestRemoveStudentFromCourse_NullStudent_ThrowsException()
@@ -658,6 +816,9 @@
             this.studentService.RemoveStudentFromCourse(null, this.testCourse);
         }
 
+        /// <summary>
+        /// Tests the remove student from course null course throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestRemoveStudentFromCourse_NullCourse_ThrowsException()
@@ -666,6 +827,9 @@
             this.studentService.RemoveStudentFromCourse(this.testStudent, null);
         }
 
+        /// <summary>
+        /// Tests the calculate courses costs for student null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestCalculateCoursesCostsForStudent_NullStudent_ThrowsException()
@@ -674,6 +838,9 @@
             this.studentService.CalculateCoursesCostsForStudent(null);
         }
 
+        /// <summary>
+        /// Tests the get credits per semester null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestGetCreditsPerSemester_NullStudent_ThrowsException()
@@ -682,6 +849,9 @@
             this.studentService.GetCreditsPerSemester(null);
         }
 
+        /// <summary>
+        /// Tests the validate student valid student does not throw exception.
+        /// </summary>
         [TestMethod]
         public void TestValidateStudent_ValidStudent_DoesNotThrowException()
         {
@@ -692,6 +862,9 @@
             Assert.IsTrue(true);
         }
 
+        /// <summary>
+        /// Tests the validate student null student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestValidateStudent_NullStudent_ThrowsException()
@@ -700,6 +873,9 @@
             this.studentService.ValidateStudent(null);
         }
 
+        /// <summary>
+        /// Tests the validate student invalid student throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestValidateStudent_InvalidStudent_ThrowsException()
@@ -711,6 +887,9 @@
             this.studentService.ValidateStudent(this.testStudent);
         }
 
+        /// <summary>
+        /// Tests the validate student no valid contact throws exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestValidateStudent_NoValidContact_ThrowsException()
@@ -723,7 +902,7 @@
             this.studentService.ValidateStudent(this.testStudent);
         }
 
-                /// <summary>
+        /// <summary>
         /// Tests calculating the average money spent by students when there are no students.
         /// </summary>
         [TestMethod]
@@ -749,7 +928,7 @@
             var students = new List<Student>
             {
                 new Student { Id = 1, FirstName = "John", LastName = "Doe", EnrolledCourses = new List<Course>() },
-                new Student { Id = 2, FirstName = "Jane", LastName = "Doe", EnrolledCourses = new List<Course>() }
+                new Student { Id = 2, FirstName = "Jane", LastName = "Doe", EnrolledCourses = new List<Course>() },
             };
             this.mockStudentDataServices.Setup(repo => repo.GetAllStudents()).Returns(students);
 
@@ -772,7 +951,7 @@
             var students = new List<Student>
             {
                 new Student { Id = 1, FirstName = "John", LastName = "Doe", EnrolledCourses = new List<Course> { course1 } },
-                new Student { Id = 2, FirstName = "Jane", LastName = "Doe", EnrolledCourses = new List<Course> { course2 } }
+                new Student { Id = 2, FirstName = "Jane", LastName = "Doe", EnrolledCourses = new List<Course> { course2 } },
             };
             this.mockStudentDataServices.Setup(repo => repo.GetAllStudents()).Returns(students);
 
@@ -796,7 +975,7 @@
             var students = new List<Student>
             {
                 new Student { Id = 1, FirstName = "John", LastName = "Doe", EnrolledCourses = new List<Course> { course1, course2 } },
-                new Student { Id = 2, FirstName = "Jane", LastName = "Doe", EnrolledCourses = new List<Course> { course3 } }
+                new Student { Id = 2, FirstName = "Jane", LastName = "Doe", EnrolledCourses = new List<Course> { course3 } },
             };
             this.mockStudentDataServices.Setup(repo => repo.GetAllStudents()).Returns(students);
 
@@ -806,6 +985,5 @@
             // Assert
             Assert.AreEqual(300m, result);
         }
-
     }
 }

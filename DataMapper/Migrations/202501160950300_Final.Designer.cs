@@ -7,13 +7,13 @@ namespace DataMapper.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class Refactor : IMigrationMetadata
+    public sealed partial class Final : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Refactor));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Final));
         
         string IMigrationMetadata.Id
         {
-            get { return "202501070735283_Refactor"; }
+            get { return "202501160950300_Final"; }
         }
         
         string IMigrationMetadata.Source

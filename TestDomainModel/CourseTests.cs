@@ -1,18 +1,31 @@
-﻿using DomainModel;
-using DomainModel.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace TestDomainModel
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using DomainModel;
+    using DomainModel.Models;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    /// <summary>
+    /// Contains unit tests for the <see cref="Course"/> class.
+    /// </summary>
     [TestClass]
     public class CourseTests
     {
+        /// <summary>
+        /// The course instance used for testing.
+        /// </summary>
         private Course course;
 
+        /// <summary>
+        /// Sets up the test environment.
+        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
@@ -26,10 +39,13 @@ namespace TestDomainModel
                 Cost = 500,
                 MinThreshold = 50,
                 MaxThreshold = 150,
-                Discount = new Discount { Percentage = 10 }
+                Discount = new Discount { Percentage = 10 },
             };
         }
 
+        /// <summary>
+        /// Tests if a valid course passes validation.
+        /// </summary>
         [TestMethod]
         public void TestValidCourse()
         {
@@ -42,6 +58,9 @@ namespace TestDomainModel
             Assert.AreEqual(0, results.Count);
         }
 
+        /// <summary>
+        /// Tests if a course with a missing name fails validation.
+        /// </summary>
         [TestMethod]
         public void TestCourseNameMissing()
         {
@@ -56,6 +75,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Name")));
         }
 
+        /// <summary>
+        /// Tests if a course with invalid credits fails validation.
+        /// </summary>
         [TestMethod]
         public void TestCourseCreditsInvalid()
         {
@@ -70,6 +92,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Credits")));
         }
 
+        /// <summary>
+        /// Tests if a course with an invalid cost fails validation.
+        /// </summary>
         [TestMethod]
         public void TestCourseCostInvalid()
         {
@@ -84,6 +109,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Cost")));
         }
 
+        /// <summary>
+        /// Tests if a course with an invalid minimum threshold fails validation.
+        /// </summary>
         [TestMethod]
         public void TestCourseMinThresholdInvalid()
         {
@@ -98,6 +126,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("MinThreshold")));
         }
 
+        /// <summary>
+        /// Tests if a course with an invalid maximum threshold fails validation.
+        /// </summary>
         [TestMethod]
         public void TestCourseMaxThresholdInvalid()
         {
@@ -112,6 +143,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("MaxThreshold")));
         }
 
+        /// <summary>
+        /// Tests if the cost of the course is valid when it is within the valid range.
+        /// </summary>
         [TestMethod]
         public void TestIsCostValid_ValidCost()
         {
@@ -124,6 +158,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.course.IsCostValid());
         }
 
+        /// <summary>
+        /// Tests if the cost of the course is invalid when it is outside the valid range.
+        /// </summary>
         [TestMethod]
         public void TestIsCostValid_InvalidCost()
         {
@@ -136,6 +173,9 @@ namespace TestDomainModel
             Assert.IsFalse(this.course.IsCostValid());
         }
 
+        /// <summary>
+        /// Tests the calculation of the course cost with a discount.
+        /// </summary>
         [TestMethod]
         public void TestGetCost_WithDiscount()
         {
@@ -144,6 +184,9 @@ namespace TestDomainModel
             Assert.AreEqual(expectedCost, this.course.GetCost());
         }
 
+        /// <summary>
+        /// Tests the calculation of the course cost without a discount.
+        /// </summary>
         [TestMethod]
         public void TestGetCost_WithoutDiscount()
         {
@@ -152,6 +195,9 @@ namespace TestDomainModel
             Assert.AreEqual(this.course.Cost, this.course.GetCost());
         }
 
+        /// <summary>
+        /// Tests the calculation of the course cost with a balance refunded.
+        /// </summary>
         [TestMethod]
         public void TestGetCost_WithBalanceRefunded()
         {
@@ -160,6 +206,10 @@ namespace TestDomainModel
 
             Assert.AreEqual(expectedCost, this.course.GetCost());
         }
+
+        /// <summary>
+        /// Tests the calculation of the course cost without a balance refunded but with a discount.
+        /// </summary>
         [TestMethod]
         public void TestGetCost_WithoutBalanceRefunded_WithDiscount()
         {
@@ -169,6 +219,9 @@ namespace TestDomainModel
             Assert.AreEqual(expectedCost, this.course.GetCost());
         }
 
+        /// <summary>
+        /// Tests the calculation of the course cost without a balance refunded and without a discount.
+        /// </summary>
         [TestMethod]
         public void TestGetCost_WithoutBalanceRefunded_NoDiscount()
         {
@@ -178,6 +231,9 @@ namespace TestDomainModel
             Assert.AreEqual(this.course.Cost, this.course.GetCost());
         }
 
+        /// <summary>
+        /// Tests the calculation of the course cost with a balance refunded and without a discount.
+        /// </summary>
         [TestMethod]
         public void TestGetCost_WithBalanceRefunded_NoDiscount()
         {
@@ -187,6 +243,10 @@ namespace TestDomainModel
 
             Assert.AreEqual(expectedCost, this.course.GetCost());
         }
+
+        /// <summary>
+        /// Tests adding a prerequisite course.
+        /// </summary>
         [TestMethod]
         public void TestAddPrerequisite()
         {
@@ -198,7 +258,7 @@ namespace TestDomainModel
                 Credits = 3,
                 Cost = 300,
                 MinThreshold = 30,
-                MaxThreshold = 90
+                MaxThreshold = 90,
             };
 
             this.course.Prerequisites.Add(prerequisite);
@@ -207,6 +267,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.course.Prerequisites.Contains(prerequisite));
         }
 
+        /// <summary>
+        /// Tests adding an available semester to the course.
+        /// </summary>
         [TestMethod]
         public void TestAddAvailableSemester()
         {
@@ -214,7 +277,7 @@ namespace TestDomainModel
             {
                 Id = 1,
                 Number = 1,
-                CreditThreshold = 30
+                CreditThreshold = 30,
             };
 
             this.course.AvailableSemesters.Add(semester);
@@ -223,6 +286,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.course.AvailableSemesters.Contains(semester));
         }
 
+        /// <summary>
+        /// Tests validation when the minimum threshold is greater than the maximum threshold.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestValidate_MinThresholdGreaterThanMaxThreshold_ThrowsException()
@@ -232,6 +298,9 @@ namespace TestDomainModel
             this.course.Validate();
         }
 
+        /// <summary>
+        /// Tests validation when the cost is not within the valid range.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestValidate_CostNotWithinValidRange_ThrowsException()
@@ -240,6 +309,9 @@ namespace TestDomainModel
             this.course.Validate();
         }
 
+        /// <summary>
+        /// Tests if the course description can be null.
+        /// </summary>
         [TestMethod]
         public void TestCourseDescriptionNullable()
         {
@@ -254,6 +326,9 @@ namespace TestDomainModel
             Assert.AreEqual(0, results.Count);
         }
 
+        /// <summary>
+        /// Tests the calculation of the course cost with a different discount.
+        /// </summary>
         [TestMethod]
         public void TestCourseWithDiscount()
         {
@@ -263,6 +338,9 @@ namespace TestDomainModel
             Assert.AreEqual(expectedCost, this.course.GetCost());
         }
 
+        /// <summary>
+        /// Tests the calculation of the course cost without a discount.
+        /// </summary>
         [TestMethod]
         public void TestCourseWithoutDiscount()
         {
@@ -271,6 +349,9 @@ namespace TestDomainModel
             Assert.AreEqual(this.course.Cost, this.course.GetCost());
         }
 
+        /// <summary>
+        /// Tests adding a student to the course.
+        /// </summary>
         [TestMethod]
         public void TestAddStudentToCourse()
         {
@@ -282,7 +363,7 @@ namespace TestDomainModel
                 Address = "123 Main St",
                 NationalId = "1234567890123",
                 Balance = 1000m,
-                RegistrationNumber = "123456"
+                RegistrationNumber = "123456",
             };
 
             this.course.Students.Add(student);
@@ -291,6 +372,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.course.Students.Contains(student));
         }
 
+        /// <summary>
+        /// Tests removing a student from the course.
+        /// </summary>
         [TestMethod]
         public void TestRemoveStudentFromCourse()
         {
@@ -302,7 +386,7 @@ namespace TestDomainModel
                 Address = "123 Main St",
                 NationalId = "1234567890123",
                 Balance = 1000m,
-                RegistrationNumber = "123456"
+                RegistrationNumber = "123456",
             };
 
             this.course.Students.Add(student);
@@ -312,6 +396,9 @@ namespace TestDomainModel
             Assert.IsFalse(this.course.Students.Contains(student));
         }
 
+        /// <summary>
+        /// Tests adding an exam to the course.
+        /// </summary>
         [TestMethod]
         public void TestAddExamToCourse()
         {
@@ -322,7 +409,7 @@ namespace TestDomainModel
                 SemesterId = 1,
                 CourseId = 1,
                 Grade = 8,
-                ExamDate = DateTime.Now
+                ExamDate = DateTime.Now,
             };
 
             this.course.Exams.Add(exam);
@@ -331,6 +418,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.course.Exams.Contains(exam));
         }
 
+        /// <summary>
+        /// Tests removing an exam from the course.
+        /// </summary>
         [TestMethod]
         public void TestRemoveExamFromCourse()
         {
@@ -341,7 +431,7 @@ namespace TestDomainModel
                 SemesterId = 1,
                 CourseId = 1,
                 Grade = 8,
-                ExamDate = DateTime.Now
+                ExamDate = DateTime.Now,
             };
 
             this.course.Exams.Add(exam);

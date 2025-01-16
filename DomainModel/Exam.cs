@@ -1,4 +1,8 @@
-﻿namespace DomainModel
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
+
+namespace DomainModel
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +14,34 @@
     /// </summary>
     public class Exam
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Exam"/> class.
+        /// </summary>
+        public Exam()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Exam"/> class with specified parameters.
+        /// </summary>
+        /// <param name="examId">The ID of the exam.</param>
+        /// <param name="studentId">The ID of the student taking the exam.</param>
+        /// <param name="semesterId">The ID of the semester in which the exam is taken.</param>
+        /// <param name="courseId">The ID of the course for which the exam is taken.</param>
+        /// <param name="grade">The grade of the exam.</param>
+        /// <param name="examDate">The date of the exam.</param>
+        public Exam(int examId, int studentId, int semesterId, int courseId, int grade, DateTime examDate)
+        {
+            this.ExamId = examId;
+            this.StudentId = studentId;
+            this.SemesterId = semesterId;
+            this.CourseId = courseId;
+            this.Grade = grade;
+            this.ExamDate = examDate;
+
+            this.Validate();
+        }
+
         /// <summary>
         /// Gets or sets the ID of the exam.
         /// </summary>
@@ -60,34 +92,6 @@
         /// Gets or sets the course for which the exam is taken.
         /// </summary>
         public Course Course { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Exam"/> class.
-        /// </summary>
-        public Exam()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Exam"/> class with specified parameters.
-        /// </summary>
-        /// <param name="examId">The ID of the exam.</param>
-        /// <param name="studentId">The ID of the student taking the exam.</param>
-        /// <param name="semesterId">The ID of the semester in which the exam is taken.</param>
-        /// <param name="courseId">The ID of the course for which the exam is taken.</param>
-        /// <param name="grade">The grade of the exam.</param>
-        /// <param name="examDate">The date of the exam.</param>
-        public Exam(int examId, int studentId, int semesterId, int courseId, int grade, DateTime examDate)
-        {
-            this.ExamId = examId;
-            this.StudentId = studentId;
-            this.SemesterId = semesterId;
-            this.CourseId = courseId;
-            this.Grade = grade;
-            this.ExamDate = examDate;
-
-            this.Validate();
-        }
 
         /// <summary>
         /// Checks if the exam is passed.

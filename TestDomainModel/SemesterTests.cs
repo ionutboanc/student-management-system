@@ -1,16 +1,29 @@
-﻿using DomainModel.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace TestDomainModel
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using DomainModel.Models;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    /// <summary>
+    /// Contains unit tests for the <see cref="Semester"/> class.
+    /// </summary>
     [TestClass]
     public class SemesterTests
     {
+        /// <summary>
+        /// The semester instance used for testing.
+        /// </summary>
         private Semester semester;
 
+        /// <summary>
+        /// Sets up the test environment.
+        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
@@ -30,8 +43,8 @@ namespace TestDomainModel
                         Credits = 5,
                         Cost = 500,
                         MinThreshold = 50,
-                        MaxThreshold = 150
-                    }
+                        MaxThreshold = 150,
+                    },
                 },
                 Students = new List<Student>
                 {
@@ -43,12 +56,15 @@ namespace TestDomainModel
                         Address = "123 Main St",
                         NationalId = "1234567890123",
                         Balance = 1000m,
-                        RegistrationNumber = "123456"
-                    }
-                }
+                        RegistrationNumber = "123456",
+                    },
+                },
             };
         }
 
+        /// <summary>
+        /// Tests if a valid semester passes validation.
+        /// </summary>
         [TestMethod]
         public void TestValidSemester()
         {
@@ -61,6 +77,9 @@ namespace TestDomainModel
             Assert.AreEqual(0, results.Count);
         }
 
+        /// <summary>
+        /// Tests if a semester with an invalid number fails validation.
+        /// </summary>
         [TestMethod]
         public void TestSemesterNumberInvalid()
         {
@@ -75,6 +94,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Number")));
         }
 
+        /// <summary>
+        /// Tests if a semester with an invalid credit threshold fails validation.
+        /// </summary>
         [TestMethod]
         public void TestCreditThresholdInvalid()
         {
@@ -89,6 +111,9 @@ namespace TestDomainModel
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("CreditThreshold")));
         }
 
+        /// <summary>
+        /// Tests adding a course to the semester.
+        /// </summary>
         [TestMethod]
         public void TestAddCourseToSemester()
         {
@@ -100,7 +125,7 @@ namespace TestDomainModel
                 Credits = 3,
                 Cost = 300,
                 MinThreshold = 30,
-                MaxThreshold = 90
+                MaxThreshold = 90,
             };
 
             this.semester.AvailableCourses.Add(newCourse);
@@ -109,6 +134,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.semester.AvailableCourses.Contains(newCourse));
         }
 
+        /// <summary>
+        /// Tests adding a student to the semester.
+        /// </summary>
         [TestMethod]
         public void TestAddStudentToSemester()
         {
@@ -120,7 +148,7 @@ namespace TestDomainModel
                 Address = "456 Main St",
                 NationalId = "9876543210987",
                 Balance = 500m,
-                RegistrationNumber = "654321"
+                RegistrationNumber = "654321",
             };
 
             this.semester.Students.Add(newStudent);
@@ -129,6 +157,9 @@ namespace TestDomainModel
             Assert.IsTrue(this.semester.Students.Contains(newStudent));
         }
 
+        /// <summary>
+        /// Tests removing a course from the semester.
+        /// </summary>
         [TestMethod]
         public void TestRemoveCourseFromSemester()
         {
@@ -140,6 +171,9 @@ namespace TestDomainModel
             Assert.IsFalse(this.semester.AvailableCourses.Contains(courseToRemove));
         }
 
+        /// <summary>
+        /// Tests removing a student from the semester.
+        /// </summary>
         [TestMethod]
         public void TestRemoveStudentFromSemester()
         {
@@ -166,12 +200,12 @@ namespace TestDomainModel
                 AvailableCourses = new List<Course>
                 {
                     new Course { Id = 1, Name = "Course 1", Credits = 5 },
-                    new Course { Id = 2, Name = "Course 2", Credits = 5 }
+                    new Course { Id = 2, Name = "Course 2", Credits = 5 },
                 },
                 Students = new List<Student>
                 {
-                    new Student { Id = 1, FirstName = "John", LastName = "Doe" }
-                }
+                    new Student { Id = 1, FirstName = "John", LastName = "Doe" },
+                },
             };
 
             // Act & Assert
@@ -194,8 +228,8 @@ namespace TestDomainModel
                 AvailableCourses = new List<Course>(),
                 Students = new List<Student>
                 {
-                    new Student { Id = 1, FirstName = "John", LastName = "Doe" }
-                }
+                    new Student { Id = 1, FirstName = "John", LastName = "Doe" },
+                },
             };
 
             // Act & Assert
@@ -218,9 +252,9 @@ namespace TestDomainModel
                 AvailableCourses = new List<Course>
                 {
                     new Course { Id = 1, Name = "Course 1", Credits = 5 },
-                    new Course { Id = 2, Name = "Course 2", Credits = 5 }
+                    new Course { Id = 2, Name = "Course 2", Credits = 5 },
                 },
-                Students = new List<Student>()
+                Students = new List<Student>(),
             };
 
             // Act & Assert
@@ -242,12 +276,12 @@ namespace TestDomainModel
                 CreditThreshold = 10,
                 AvailableCourses = new List<Course>
                 {
-                    new Course { Id = 1, Name = "Course 1", Credits = 5 }
+                    new Course { Id = 1, Name = "Course 1", Credits = 5 },
                 },
                 Students = new List<Student>
                 {
-                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" }
-                }
+                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" },
+                },
             };
 
             // Act & Assert
@@ -269,12 +303,12 @@ namespace TestDomainModel
                 AvailableCourses = new List<Course>
                 {
                     new Course { Id = 1, Name = "Course 1", Credits = 5 },
-                    new Course { Id = 2, Name = "Course 2", Credits = 5 }
+                    new Course { Id = 2, Name = "Course 2", Credits = 5 },
                 },
                 Students = new List<Student>
                 {
-                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" }
-                }
+                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" },
+                },
             };
 
             // Act & Assert
@@ -296,12 +330,12 @@ namespace TestDomainModel
                 AvailableCourses = new List<Course>
                 {
                     new Course { Id = 1, Name = "Course 1", Credits = 5 },
-                    new Course { Id = 2, Name = "Course 2", Credits = 6 }
+                    new Course { Id = 2, Name = "Course 2", Credits = 6 },
                 },
                 Students = new List<Student>
                 {
-                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" }
-                }
+                    new Student { Id = 1, FirstName = "Boanc", LastName = "Ionut" },
+                },
             };
 
             // Act & Assert

@@ -1,13 +1,23 @@
-﻿using DomainModel.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace TestDomainModel
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using DomainModel.Models;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    /// <summary>
+    /// Contains unit tests for the <see cref="Discount"/> class.
+    /// </summary>
     [TestClass]
     public class DiscountTests
     {
+        /// <summary>
+        /// Tests the constructor of the <see cref="Discount"/> class with courses and percentage.
+        /// </summary>
         [TestMethod]
         public void TestDiscountConstructorWithCoursesAndPercentage()
         {
@@ -20,8 +30,8 @@ namespace TestDomainModel
                     Name = "Math 101",
                     Description = "Basic Mathematics",
                     Credits = 3,
-                    Cost = 300
-                }
+                    Cost = 300,
+                },
             };
             var discount = new Discount(courses, 30m);
 
@@ -32,6 +42,9 @@ namespace TestDomainModel
             Assert.AreEqual(courses[0], discount.Courses[0]);
         }
 
+        /// <summary>
+        /// Tests the constructor of the <see cref="Discount"/> class with empty courses list.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestDiscountConstructorWithEmptyCourses_ThrowsException()
@@ -40,6 +53,9 @@ namespace TestDomainModel
             var discount = new Discount(new List<Course>(), 30m);
         }
 
+        /// <summary>
+        /// Tests if a negative discount percentage throws a validation exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestDiscountPercentageNegative_ThrowsException()
@@ -47,15 +63,15 @@ namespace TestDomainModel
             // Arrange
             var courses = new List<Course>
             {
-            new Course
-            {
-                Id = 1,
-                Name = "Math 101",
-                Description = "Basic Mathematics",
-                Credits = 3,
-                Cost = 300,
-            }
-        };
+                new Course
+                {
+                    Id = 1,
+                    Name = "Math 101",
+                    Description = "Basic Mathematics",
+                    Credits = 3,
+                    Cost = 300,
+                },
+            };
             var discount = new Discount(courses, -15m);
 
             // Act
@@ -63,6 +79,9 @@ namespace TestDomainModel
             Validator.ValidateObject(discount, context, true);
         }
 
+        /// <summary>
+        /// Tests if a discount percentage greater than 100 throws a validation exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestDiscountPercentageTooBig_ThrowsException()
@@ -76,8 +95,8 @@ namespace TestDomainModel
                     Name = "Math 101",
                     Description = "Basic Mathematics",
                     Credits = 3,
-                    Cost = 300
-                }
+                    Cost = 300,
+                },
             };
             var discount = new Discount(courses, 105m);
 
@@ -86,6 +105,9 @@ namespace TestDomainModel
             Validator.ValidateObject(discount, context, true);
         }
 
+        /// <summary>
+        /// Tests setting the discount percentage.
+        /// </summary>
         [TestMethod]
         public void TestSetDiscountPercentage()
         {
@@ -98,8 +120,8 @@ namespace TestDomainModel
                     Name = "Math 101",
                     Description = "Basic Mathematics",
                     Credits = 3,
-                    Cost = 300
-                }
+                    Cost = 300,
+                },
             };
             var discount = new Discount(courses, 0m);
 
@@ -110,6 +132,9 @@ namespace TestDomainModel
             Assert.AreEqual(50m, discount.Percentage);
         }
 
+        /// <summary>
+        /// Tests adding courses to the discount.
+        /// </summary>
         [TestMethod]
         public void TestAddCoursesToDiscount()
         {
@@ -122,8 +147,8 @@ namespace TestDomainModel
                     Name = "Math 101",
                     Description = "Basic Mathematics",
                     Credits = 3,
-                    Cost = 300
-                }
+                    Cost = 300,
+                },
             };
             var discount = new Discount(courses, 0m);
             var course2 = new Course
@@ -132,7 +157,7 @@ namespace TestDomainModel
                 Name = "Physics 101",
                 Description = "Basic Physics",
                 Credits = 4,
-                Cost = 400
+                Cost = 400,
             };
 
             // Act
@@ -144,29 +169,32 @@ namespace TestDomainModel
             Assert.IsTrue(discount.Courses.Contains(course2));
         }
 
+        /// <summary>
+        /// Tests removing courses from the discount.
+        /// </summary>
         [TestMethod]
         public void TestRemoveCoursesFromDiscount()
         {
             // Arrange
             var courses = new List<Course>
-    {
-        new Course
-        {
-            Id = 1,
-            Name = "Math 101",
-            Description = "Basic Mathematics",
-            Credits = 3,
-            Cost = 300
-        },
-        new Course
-        {
-            Id = 2,
-            Name = "Physics 101",
-            Description = "Basic Physics",
-            Credits = 4,
-            Cost = 400
-        }
-    };
+            {
+                new Course
+                {
+                    Id = 1,
+                    Name = "Math 101",
+                    Description = "Basic Mathematics",
+                    Credits = 3,
+                    Cost = 300,
+                },
+                new Course
+                {
+                    Id = 2,
+                    Name = "Physics 101",
+                    Description = "Basic Physics",
+                    Credits = 4,
+                    Cost = 400,
+                },
+            };
             var discount = new Discount(courses, 0m);
 
             // Act

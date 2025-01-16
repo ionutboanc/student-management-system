@@ -1,30 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using DataMapper;
-using DomainModel;
-using DomainModel.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using ServiceLayer.ServiceImplementation;
-using Utilities;
+﻿// <copyright file="{fileName}" company="Transilvania University of Brasov">
+// Copyright (c) 2025 Boanc Ionut-Silviu. All rights reserved.
+// </copyright>
 
 namespace TestServiceLayer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using DataMapper;
+    using DomainModel;
+    using DomainModel.Models;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
+    using ServiceLayer.ServiceImplementation;
+    using Utilities;
+
+    /// <summary>
+    /// Unit tests for the <see cref="ExamService"/> class.
+    /// </summary>
     [TestClass]
     public class ExamServiceTests
     {
+        /// <summary>
+        /// Mock for exam data services.
+        /// </summary>
         private Mock<IExamDataServices> mockExamDataServices;
+
+        /// <summary>
+        /// Mock for course data services.
+        /// </summary>
         private Mock<ICourseDataServices> mockCourseDataServices;
+
+        /// <summary>
+        /// Mock for student data services.
+        /// </summary>
         private Mock<IStudentDataServices> mockStudentDataServices;
+
+        /// <summary>
+        /// Mock for DAO factory.
+        /// </summary>
         private Mock<IDAOFactory> mockDAOFactory;
+
+        /// <summary>
+        /// The exam service instance used for testing.
+        /// </summary>
         private ExamService examService;
+
+        /// <summary>
+        /// The test exam instance.
+        /// </summary>
         private Exam testExam;
+
+        /// <summary>
+        /// The test student instance.
+        /// </summary>
         private Student testStudent;
+
+        /// <summary>
+        /// The test course instance.
+        /// </summary>
         private Course testCourse;
+
+        /// <summary>
+        /// The test semester instance.
+        /// </summary>
         private Semester testSemester;
 
+        /// <summary>
+        /// Sets up the test environment.
+        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
@@ -38,7 +83,7 @@ namespace TestServiceLayer
             this.mockDAOFactory.Setup(factory => factory.ExamDataServices).Returns(this.mockExamDataServices.Object);
             this.mockDAOFactory.Setup(factory => factory.CourseDataServices).Returns(this.mockCourseDataServices.Object);
             this.mockDAOFactory.Setup(factory => factory.StudentDataServices).Returns(this.mockStudentDataServices.Object);
-            typeof(DAOFactoryMethod).GetField("_currentDAOFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, this.mockDAOFactory.Object);
+            typeof(DAOFactoryMethod).GetField("CurrentDaoFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, this.mockDAOFactory.Object);
 
             // Initialize a valid exam entity
             this.testExam = new Exam
@@ -48,7 +93,7 @@ namespace TestServiceLayer
                 CourseId = 1,
                 SemesterId = 1,
                 Grade = 8,
-                ExamDate = DateTime.Now.AddDays(1) // Future date
+                ExamDate = DateTime.Now.AddDays(1), // Future date
             };
 
             // Initialize a valid student entity
@@ -62,7 +107,7 @@ namespace TestServiceLayer
                 Balance = 1000m,
                 RegistrationNumber = "123456",
                 CurrentSemesterId = 1,
-                EnrolledCourses = new List<Course>()
+                EnrolledCourses = new List<Course>(),
             };
 
             // Initialize a valid course entity
@@ -76,16 +121,17 @@ namespace TestServiceLayer
                 MinThreshold = 50,
                 MaxThreshold = 150,
                 Prerequisites = new List<Course>(),
-                AvailableSemesters = new List<Semester>()
+                AvailableSemesters = new List<Semester>(),
             };
 
+            // Initialize a valid semester entity
             this.testSemester = new Semester
             {
                 Id = 1,
                 Number = 1,
                 CreditThreshold = 30,
                 AvailableCourses = new List<Course> { this.testCourse },
-                Students = new List<Student> { this.testStudent }
+                Students = new List<Student> { this.testStudent },
             };
 
             this.testExam.Course = this.testCourse;
@@ -93,6 +139,9 @@ namespace TestServiceLayer
             this.testExam.Semester = this.testSemester;
         }
 
+        /// <summary>
+        /// Tests adding a valid exam.
+        /// </summary>
         [TestMethod]
         public void TestAddExam_ValidExam_AddsSuccessfully()
         {
@@ -107,6 +156,9 @@ namespace TestServiceLayer
             this.mockExamDataServices.Verify(repo => repo.AddExam(this.testExam), Times.Once);
         }
 
+        /// <summary>
+        /// Tests adding an exam on the same day as another exam.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestAddExam_ExamOnSameDay_ThrowsException()
@@ -119,7 +171,7 @@ namespace TestServiceLayer
                 CourseId = 2,
                 SemesterId = 1,
                 Grade = 7,
-                ExamDate = this.testExam.ExamDate
+                ExamDate = this.testExam.ExamDate,
             };
 
             var exams = new List<Exam> { existingExam };
@@ -129,6 +181,9 @@ namespace TestServiceLayer
             this.examService.AddExam(this.testExam);
         }
 
+        /// <summary>
+        /// Tests adding an exam that exceeds the maximum number of attempts.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestAddExam_ExceedsMaxAttempts_ThrowsException()
@@ -137,7 +192,7 @@ namespace TestServiceLayer
             var existingExams = new List<Exam>
             {
                 new Exam { ExamId = 2, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 4, ExamDate = DateTime.Now.AddMonths(-4) },
-                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) }
+                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) },
             };
 
             this.mockExamDataServices.Setup(repo => repo.GetAllExams()).Returns(existingExams);
@@ -146,6 +201,9 @@ namespace TestServiceLayer
             this.examService.AddExam(this.testExam);
         }
 
+        /// <summary>
+        /// Tests adding an exam with a grade out of range.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ValidationException))]
         public void TestAddExam_GradeOutOfRange_ThrowsException()
@@ -157,6 +215,9 @@ namespace TestServiceLayer
             this.examService.AddExam(this.testExam);
         }
 
+        /// <summary>
+        /// Tests deleting an exam.
+        /// </summary>
         [TestMethod]
         public void TestDeleteExam()
         {
@@ -170,6 +231,9 @@ namespace TestServiceLayer
             this.mockExamDataServices.Verify(repo => repo.DeleteExam(this.testExam), Times.Once);
         }
 
+        /// <summary>
+        /// Tests deleting an invalid exam.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestDeleteExam_InvalidExam_ThrowsException()
@@ -178,6 +242,9 @@ namespace TestServiceLayer
             this.examService.DeleteExam(null);
         }
 
+        /// <summary>
+        /// Tests getting an exam by ID.
+        /// </summary>
         [TestMethod]
         public void TestGetExamById()
         {
@@ -192,6 +259,9 @@ namespace TestServiceLayer
             Assert.AreEqual(8, result.Grade);
         }
 
+        /// <summary>
+        /// Tests getting an exam by an invalid ID.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestGetExamById_InvalidId_ThrowsException()
@@ -200,6 +270,9 @@ namespace TestServiceLayer
             this.examService.GetExamById(0);
         }
 
+        /// <summary>
+        /// Tests getting all exams.
+        /// </summary>
         [TestMethod]
         public void TestGetAllExams()
         {
@@ -215,19 +288,27 @@ namespace TestServiceLayer
             Assert.AreEqual(1, result.Count());
         }
 
+        /// <summary>
+        /// Tests getting all exams when there are no exams.
+        /// </summary>
         [TestMethod]
         public void TestGetAllExams_NoExams()
         {
             // Arrange
             var exams = new List<Exam>();
             this.mockExamDataServices.Setup(repo => repo.GetAllExams()).Returns(exams);
+
             // Act
             var result = this.examService.GetAllExams();
+
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Count());
         }
 
+        /// <summary>
+        /// Tests getting exams by student.
+        /// </summary>
         [TestMethod]
         public void TestGetExamsByStudent()
         {
@@ -261,6 +342,9 @@ namespace TestServiceLayer
             Assert.AreEqual(0, result.Count());
         }
 
+        /// <summary>
+        /// Tests getting exams by course.
+        /// </summary>
         [TestMethod]
         public void TestGetExamsByCourse()
         {
@@ -276,19 +360,27 @@ namespace TestServiceLayer
             Assert.AreEqual(1, result.Count());
         }
 
+        /// <summary>
+        /// Tests getting exams by course when there are no exams.
+        /// </summary>
         [TestMethod]
         public void TestGetExamsByCourse_NoExams()
         {
             // Arrange
             var exams = new List<Exam>();
             this.mockExamDataServices.Setup(repo => repo.GetAllExams()).Returns(exams);
+
             // Act
             var result = this.examService.GetExamsByCourse(this.testCourse);
+
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Count());
         }
 
+        /// <summary>
+        /// Tests adding an exam when the student has too many attempts, and refunds the balance.
+        /// </summary>
         [TestMethod]
         public void TestAddExam_TooManyAttempts_RefundsBalance()
         {
@@ -296,7 +388,7 @@ namespace TestServiceLayer
             var existingExams = new List<Exam>
             {
                 new Exam { ExamId = 2, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 4, ExamDate = DateTime.Now.AddMonths(-4) },
-                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) }
+                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) },
             };
 
             this.mockExamDataServices.Setup(repo => repo.GetAllExams()).Returns(existingExams);
@@ -310,7 +402,6 @@ namespace TestServiceLayer
             catch (ValidationException ex)
             {
                 Assert.AreEqual($"The student has already taken the exam for this course {Constants.MaxNumberOfAttempts} times.", ex.Message);
-
             }
 
             // Assert
@@ -320,6 +411,9 @@ namespace TestServiceLayer
             this.mockStudentDataServices.Verify(repo => repo.UpdateStudent(this.testStudent), Times.Once);
         }
 
+        /// <summary>
+        /// Tests adding an exam when the student has too many attempts, and ensures no double refund.
+        /// </summary>
         [TestMethod]
         public void TestAddExam_TooManyAttempts_NoDoubleRefund()
         {
@@ -327,7 +421,7 @@ namespace TestServiceLayer
             var existingExams = new List<Exam>
             {
                 new Exam { ExamId = 2, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 4, ExamDate = DateTime.Now.AddMonths(-4) },
-                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) }
+                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) },
             };
 
             this.mockExamDataServices.Setup(repo => repo.GetAllExams()).Returns(existingExams);
@@ -341,7 +435,6 @@ namespace TestServiceLayer
             catch (ValidationException ex)
             {
                 Assert.AreEqual($"The student has already taken the exam for this course {Constants.MaxNumberOfAttempts} times.", ex.Message);
-
             }
 
             // Assert
@@ -351,6 +444,9 @@ namespace TestServiceLayer
             this.mockStudentDataServices.Verify(repo => repo.UpdateStudent(this.testStudent), Times.Never);
         }
 
+        /// <summary>
+        /// Tests updating an exam when the student has too many attempts, and refunds the balance.
+        /// </summary>
         [TestMethod]
         public void TestUpdateExam_TooManyAttempts_RefundsBalance()
         {
@@ -358,7 +454,7 @@ namespace TestServiceLayer
             var existingExams = new List<Exam>
             {
                 new Exam { ExamId = 2, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 4, ExamDate = DateTime.Now.AddMonths(-4) },
-                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) }
+                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) },
             };
 
             this.mockExamDataServices.Setup(repo => repo.GetAllExams()).Returns(existingExams);
@@ -372,7 +468,6 @@ namespace TestServiceLayer
             catch (ValidationException ex)
             {
                 Assert.AreEqual($"The student has already taken the exam for this course {Constants.MaxNumberOfAttempts} times.", ex.Message);
-
             }
 
             // Assert
@@ -382,15 +477,18 @@ namespace TestServiceLayer
             this.mockStudentDataServices.Verify(repo => repo.UpdateStudent(this.testStudent), Times.Once);
         }
 
+        /// <summary>
+        /// Tests updating an exam when the student has too many attempts, and ensures no double refund.
+        /// </summary>
         [TestMethod]
         public void TestUpdateExam_TooManyAttempts_NoDoubleRefund()
         {
             // Arrange
             var existingExams = new List<Exam>
-    {
-        new Exam { ExamId = 2, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 4, ExamDate = DateTime.Now.AddMonths(-4) },
-        new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) }
-    };
+            {
+                new Exam { ExamId = 2, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 4, ExamDate = DateTime.Now.AddMonths(-4) },
+                new Exam { ExamId = 3, StudentId = 1, CourseId = 1, SemesterId = 1, Grade = 3, ExamDate = DateTime.Now.AddMonths(-3) },
+            };
 
             this.mockExamDataServices.Setup(repo => repo.GetAllExams()).Returns(existingExams);
             this.testCourse.BalanceRefunded = true;
@@ -402,7 +500,6 @@ namespace TestServiceLayer
             }
             catch (ValidationException ex)
             {
-                // Assert
                 Assert.AreEqual($"The student has already taken the exam for this course {Constants.MaxNumberOfAttempts} times.", ex.Message);
             }
 
