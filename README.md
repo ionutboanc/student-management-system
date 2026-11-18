@@ -2,7 +2,7 @@
 
 Student Management System is the back-end of an application for running a university's academic records. It handles students, courses, semesters, exams and tuition, and makes sure every action follows the university's rules, such as course prerequisites, exam attempt limits and payments.
 
-It was built as a team project at the BEST Tremend 2024/2025 hackathon, in January 2025.
+It is a university project from Transilvania University of Brașov, completed in January 2025.
 
 ## 💡 Why this project
 
